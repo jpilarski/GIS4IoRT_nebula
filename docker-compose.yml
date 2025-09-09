@@ -1,0 +1,69 @@
+services:
+
+  coordinator:
+    image: nebulastream/nes-executable-image:latest
+    entrypoint: "nesCoordinator --configPath=/config/coordinator.yaml"
+    ports:
+      - 8081:8081
+    volumes:
+      - ./config/nebulastream:/config
+
+  gps_odom-worker:
+    image: nebulastream/nes-executable-image:latest
+    entrypoint: "nesWorker --configPath=/config/gps_odom-worker.yaml"
+    depends_on:
+      - coordinator
+    volumes:
+      - ./config/nebulastream:/config
+
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - ./config/mosquitto:/mosquitto/config
+
+  ros-roscore:
+    image: ros:noetic-ros-core
+    container_name: ros-roscore
+    entrypoint: /bin/bash
+    command: -c "source /opt/ros/noetic/setup.bash && roscore"
+    tty: true
+    stdin_open: true
+
+  ros-python:
+    build:
+      context: .
+      dockerfile: config/ros-python/Dockerfile
+    container_name: ros-python
+    depends_on:
+      - ros-roscore
+    environment:
+      - ROS_MASTER_URI=http://ros-roscore:11311
+      - ROS_HOSTNAME=ros-python
+    volumes:
+      - ./bags:/bags
+      - ./scripts:/scripts
+    tty: true
+    stdin_open: true
+
+  ui:
+    image: nebulastream/nes-ui-image:latest
+    ports:
+      - 9000:9000
+
+  grafana:
+    build: ./config/grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+
+  nes-query:
+    image: curlimages/curl:latest
+    depends_on:
+      - coordinator
+      - gps_odom-worker
+    volumes:
+      - ./config/nebulastream/start-query.sh:/start-query.sh
+    entrypoint: ["sh", "/start-query.sh"]

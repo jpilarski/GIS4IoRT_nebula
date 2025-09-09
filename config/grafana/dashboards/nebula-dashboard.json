@@ -1,0 +1,117 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "graphTooltip": 0,
+    "id": 2,
+    "panels": [
+        {
+            "id": 1,
+            "title": "GPS positions",
+            "type": "table",
+            "datasource": {
+                "type": "grafana-mqtt-datasource",
+                "name": "gps_nebula"
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 1
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "inspect": false
+                    },
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": false
+                },
+                "showHeader": true
+            },
+            "pluginVersion": "11.1.0",
+            "targets": [
+                {
+                    "refId": "A",
+                    "topic": "gps_odom"
+                }
+            ],
+            "transformations": [
+                {
+                    "id": "filterFieldsByName",
+                    "options": {
+                        "include": {
+                            "names": [
+                                "timestamp",
+                                "robot_id",
+                                "header_seq",
+                                "position_x",
+                                "position_y",
+                                "position_z",
+                                "orientation_z",
+                                "orientation_w"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "refresh": "",
+    "schemaVersion": 39,
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-1m",
+        "to": "now"
+    },
+    "timezone": "browser",
+    "title": "Nebula",
+    "uid": "cdpn6020mo3y8c",
+    "version": 2
+}

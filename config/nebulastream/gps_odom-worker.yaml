@@ -1,0 +1,15 @@
+logLevel: LOG_ERROR
+
+coordinatorHost: coordinator
+
+localWorkerHost: gps_odom-worker
+
+physicalSources:
+    - logicalSourceName: gps_position
+      physicalSourceName: gps_odom
+      type: MQTT_SOURCE
+      configuration:
+          url: ws://mosquitto:9001
+          topic: gps_odom
+
+workerId: 2

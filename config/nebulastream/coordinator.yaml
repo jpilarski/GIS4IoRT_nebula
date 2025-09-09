@@ -1,0 +1,31 @@
+logLevel: LOG_ERROR
+
+coordinatorHost: coordinator
+
+worker:
+    localWorkerHost: coordinator
+
+restIp: 0.0.0.0
+
+logicalSources:
+    - logicalSourceName: gps_position
+      fields:
+          - name: timestamp
+            type: UINT64
+          - name: robot_id
+            type: INT8
+          - name: header_seq
+            type: INT8
+          - name: position_x
+            type: FLOAT64
+          - name: position_y
+            type: FLOAT64
+          - name: position_z
+            type: FLOAT64
+          - name: orientation_z
+            type: FLOAT64
+          - name: orientation_w
+            type: FLOAT64
+
+optimizer:
+    queryMergerRule: "DefaultQueryMergerRule"
