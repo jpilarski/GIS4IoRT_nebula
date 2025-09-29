@@ -53,12 +53,6 @@ services:
     ports:
       - 9000:9000
 
-  grafana:
-    build: ./config/grafana
-    restart: unless-stopped
-    ports:
-      - 3000:3000
-
   nes-query:
     image: curlimages/curl:latest
     depends_on:

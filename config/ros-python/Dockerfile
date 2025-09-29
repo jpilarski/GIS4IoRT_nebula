@@ -21,7 +21,8 @@ RUN pip install \
     bokeh \
     requests \
     sseclient \
-    paho-mqtt
+    paho-mqtt \
+    keyboard
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
 

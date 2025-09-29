@@ -1,8 +1,0 @@
-apiVersion: 1
-
-providers:
-    - name: "Nebula dashboards"
-      disableDeletion: false
-      allowUiUpdates: true
-      options:
-          path: "/var/lib/grafana/dashboards"

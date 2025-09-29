@@ -4,6 +4,7 @@ import json
 import paho.mqtt.client as mqtt
 from nav_msgs.msg import Odometry
 from threading import Lock
+import time
 
 client = mqtt.Client(
     callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
@@ -20,11 +21,12 @@ lock = Lock()
 
 def callback(msg: Odometry):
     global sent_count
-    timestamp = msg.header.stamp.to_nsec() // 1_000_000
+    timestamp = int(time.time() * 1000)
+    # timestamp = msg.header.stamp.to_nsec() // 1_000_000
 
     data = {
         "timestamp": timestamp,
-        "robot_id": 0,
+        "robot_id": msg.child_frame_id,
         "header_seq": msg.header.seq,
         "position_x": msg.pose.pose.position.x,
         "position_y": msg.pose.pose.position.y,

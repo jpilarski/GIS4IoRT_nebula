@@ -13,9 +13,9 @@ logicalSources:
           - name: timestamp
             type: UINT64
           - name: robot_id
-            type: INT8
+            type: UINT64
           - name: header_seq
-            type: INT8
+            type: UINT64
           - name: position_x
             type: FLOAT64
           - name: position_y

@@ -1,9 +1,0 @@
-apiVersion: 1
-
-datasources:
-    - name: "gps_nebula"
-      type: "grafana-mqtt-datasource"
-      isDefault: true
-      editable: true
-      version: 1
-      "jsonData": { "uri": "ws://mosquitto:9001" }
