@@ -12,4 +12,4 @@ physicalSources:
           url: ws://mosquitto:9001
           topic: gps_odom
 
-workerId: 2
+workerId: 1

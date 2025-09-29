@@ -3,6 +3,7 @@ import sys
 import select
 import tty
 import termios
+import json
 
 BROKER = "mosquitto"
 PORT = 9001
@@ -15,7 +16,9 @@ def on_connect(client, userdata, flags, reasonCode, properties):
     switch_topic(client)
 
 def on_message(client, userdata, msg):
-    print(msg.payload.decode())
+    data = json.loads(msg.payload.decode())
+    out = [f'{k.split("$")[-1]}: {v}' for k, v in data.items()]
+    print(", ".join(out))
 
 def switch_topic(client):
     global current_topic

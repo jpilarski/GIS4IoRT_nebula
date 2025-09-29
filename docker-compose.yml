@@ -45,6 +45,7 @@ services:
     volumes:
       - ./bags:/bags
       - ./scripts:/scripts
+      - ./config/ros-python/aliases.sh:/root/.bash_aliases
     tty: true
     stdin_open: true
 
