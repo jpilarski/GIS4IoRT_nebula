@@ -1,0 +1,7 @@
+services:
+  coordinator:
+    image: nebulastream/nes-executable-image:latest
+    command: nesCoordinator --configpath=/config/nebulastream/coordinator.yml
+    network_mode: host
+    volumes:
+      - ./config/nebulastream:/config/nebulastream
