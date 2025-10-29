@@ -1,1 +1,4 @@
 coordinatorHost: 192.168.0.193
+restIp: 192.168.0.193
+restPort: 8081
+rpcPort: 4000
