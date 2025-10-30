@@ -1,0 +1,19 @@
+logicalSources:
+    - logicalSourceName: gps_position
+      fields:
+          - name: timestamp
+            type: UINT64
+          - name: robot_id
+            type: UINT64
+          - name: header_seq
+            type: UINT64
+          - name: position_x
+            type: FLOAT64
+          - name: position_y
+            type: FLOAT64
+          - name: position_z
+            type: FLOAT64
+          - name: orientation_z
+            type: FLOAT64
+          - name: orientation_w
+            type: FLOAT64
