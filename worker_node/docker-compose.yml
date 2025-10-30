@@ -3,10 +3,10 @@ services:
     image: nebulastream/nes-executable-image:latest
     command:
     - nesWorker
-    - --coordinatorHost=${COORDINATOR_IP}
-    - --coordinatorPort=${RPC_PORT}
-    - --localWorkerHost=${WORKER_IP}
-    - --workerId=${WORKER_ID}
+    # - --coordinatorHost=${COORDINATOR_IP}
+    # - --coordinatorPort=${RPC_PORT}
+    # - --localWorkerHost=${WORKER_IP}
+    # - --workerId=${WORKER_ID}
     - --configPath=/config/nebulastream/physical_sources.yml
     network_mode: host
     volumes:
