@@ -1,7 +1,0 @@
-services:
-  worker:
-    image: nebulastream/nes-executable-image:latest
-    command: nesWorker --configPath=/config/nebulastream/worker.yml
-    network_mode: host
-    volumes:
-      - ./config/nebulastream:/config/nebulastream

@@ -1,0 +1,7 @@
+physicalSources:
+    - logicalSourceName: gps_position
+      physicalSourceName: robot_1
+      type: MQTT_SOURCE
+      configuration:
+          url: ws://mosquitto:9001
+          topic: gps_odom

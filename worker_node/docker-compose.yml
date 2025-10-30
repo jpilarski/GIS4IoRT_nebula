@@ -1,7 +1,22 @@
 services:
   worker:
     image: nebulastream/nes-executable-image:latest
-    command: nesWorker --configPath=/config/nebulastream/worker.yml
+    command:
+    - nesWorker
+    - --coordinatorHost=${COORDINATOR_IP}
+    - --coordinatorPort=${RPC_PORT}
+    - --localWorkerHost=${WORKER_IP}
+    - --workerId=${WORKER_ID}
+    - --configPath=/config/nebulastream/physical_sources.yml
     network_mode: host
     volumes:
       - ./config/nebulastream:/config/nebulastream
+
+  mosquitto:
+    image: eclipse-mosquitto
+    
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - ./config/mosquitto:/mosquitto/config

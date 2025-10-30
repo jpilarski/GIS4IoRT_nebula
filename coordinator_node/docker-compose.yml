@@ -10,7 +10,7 @@ services:
      - --worker.coordinatorHost=${COORDINATOR_IP}
      - --worker.coordinatorPort=${RPC_PORT}
      - --worker.localWorkerHost=${COORDINATOR_IP}
-     - --worker.workerId=1
+     - --worker.workerId=${WORKER_ID}
      - --configPath=/config/nebulastream/logical_sources.yml
     network_mode: host
     volumes:
