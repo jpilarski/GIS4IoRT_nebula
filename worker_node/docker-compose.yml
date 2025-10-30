@@ -14,9 +14,31 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto
-    
-    ports:
-      - 1883:1883
-      - 9001:9001
+    network-mode: host
     volumes:
       - ./config/mosquitto:/mosquitto/config
+
+  ros-roscore:
+    image: ros:noetic-ros-core
+    container_name: ros-roscore
+    entrypoint: /bin/bash
+    command: -c "source /opt/ros/noetic/setup.bash && roscore"
+    tty: true
+    stdin_open: true
+
+  ros-python:
+    build:
+      context: .
+      dockerfile: config/ros-python/Dockerfile
+    container_name: ros-python
+    depends_on:
+      - ros-roscore
+    environment:
+      - ROS_MASTER_URI=http://ros-roscore:11311
+      - ROS_HOSTNAME=ros-python
+    volumes:
+      - ./bags:/bags
+      - ./scripts:/scripts
+      - ./config/ros-python/aliases.sh:/root/.bash_aliases
+    tty: true
+    stdin_open: true
