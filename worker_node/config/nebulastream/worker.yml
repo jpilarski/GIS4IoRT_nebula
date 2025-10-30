@@ -1,4 +1,4 @@
-coordinatorHost: 192.168.0.193
+coordinatorHost: 10.160.46.60  #192.168.0.193
 coordinatorPort: 4000
-localWorkerHost: 192.168.0.120
+localWorkerHost: 10.160.63.111  #192.168.0.120
 workerId: 2
