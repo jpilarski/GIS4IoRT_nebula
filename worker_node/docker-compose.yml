@@ -14,7 +14,7 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto
-    network-mode: host
+    network_mode: host
     volumes:
       - ./config/mosquitto:/mosquitto/config
 
