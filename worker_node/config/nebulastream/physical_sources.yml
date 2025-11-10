@@ -8,5 +8,5 @@ physicalSources:
       physicalSourceName: robot_1
       type: MQTT_SOURCE
       configuration:
-          url: ws://mosquitto:9001
+          url: ws://192.168.0.163:9001
           topic: gps_odom
