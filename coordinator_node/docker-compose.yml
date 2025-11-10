@@ -15,11 +15,3 @@ services:
     network_mode: host
     volumes:
       - ./config/nebulastream:/config/nebulastream
-  
-  nes-query:
-    image: curlimages/curl:latest
-    depends_on:
-      - coordinator
-    volumes:
-      - ./config/nes-query/start-query.sh:/start-query.sh
-    entrypoint: ["sh", "/start-query.sh"]
