@@ -46,7 +46,7 @@ services:
   nes-query:
     image: curlimages/curl:latest
     depends_on:
-      - coordinator
+      - worker
     command:
       - sh
       - -c
