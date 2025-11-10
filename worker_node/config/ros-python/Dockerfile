@@ -22,7 +22,8 @@ RUN pip install \
     requests \
     sseclient \
     paho-mqtt \
-    keyboard
+    keyboard \
+    rosbags
 
 RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc
 
