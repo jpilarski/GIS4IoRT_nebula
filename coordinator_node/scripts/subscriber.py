@@ -26,7 +26,7 @@ client.on_message = on_message
 
 client.connect(BROKER_IP, PORT, 60)
 
-print("Uruchamianie pętli... (Naciśnij Ctrl+C aby zakończyć)", flush=True)
+print("Listening for query_1a results", flush=True)
 
 try:
     client.loop_forever()

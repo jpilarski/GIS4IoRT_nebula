@@ -12,6 +12,7 @@ services:
      - --worker.coordinatorPort=${RPC_PORT}
      - --worker.localWorkerHost=${COORDINATOR_IP}
      - --worker.workerId=${WORKER_ID}
+     - --logLevel=LOG_WARNING
      - --configPath=/config/nebulastream/logical_sources.yml
     network_mode: host
     volumes:
@@ -27,21 +28,20 @@ services:
     profiles: ["all", "main"]
     network_mode: host
   subscriber:
-    image: python:3-slim
+    build:
+      context: .
+      dockerfile: config/subscriber/Dockerfile
     profiles: ["all", "subscriber"]
     network_mode: host
+    env_file: .env
     volumes:
       - ./scripts:/scripts
-      - ./config/subscriber:/config
-    command: >
-      sh -c "pip install -r /config/requirements && 
-             python /scripts/subscriber.py ${COORDINATOR_IP} ${MQTT_PORT}"
+    command: ["python", "/scripts/subscriber.py", "${COORDINATOR_IP}", "${MQTT_PORT}"]
   query_1a:
     image: curlimages/curl:latest
     profiles: ["all", "query"]
     network_mode: host
     volumes:
       - ./config/query_1a:/query/
-    command: >
-      sh /query/run_query_1a.sh
+    command: ["sh", "/query/run_query_1a.sh"]
     env_file: .env
