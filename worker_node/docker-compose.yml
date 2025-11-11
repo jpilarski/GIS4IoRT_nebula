@@ -3,10 +3,6 @@ services:
     image: nebulastream/nes-executable-image:latest
     command:
     - nesWorker
-    # - --coordinatorHost=${COORDINATOR_IP}
-    # - --coordinatorPort=${RPC_PORT}
-    # - --localWorkerHost=${WORKER_IP}
-    # - --workerId=${WORKER_ID}
     - --configPath=/config/nebulastream/physical_sources.yml
     network_mode: host
     volumes:
@@ -26,22 +22,22 @@ services:
   #   tty: true
   #   stdin_open: true
 
-  # ros-python:
-  #   build:
-  #     context: .
-  #     dockerfile: config/ros-python/Dockerfile
-  #   container_name: ros-python
-  #   depends_on:
-  #     - ros-roscore
-  #   environment:
-  #     - ROS_MASTER_URI=http://ros-roscore:11311
-  #     - ROS_HOSTNAME=ros-python
-  #   volumes:
-  #     - ./bags:/bags
-  #     - ./scripts:/scripts
-  #     - ./config/ros-python/aliases.sh:/root/.bash_aliases
-  #   tty: true
-  #   stdin_open: true
+  ros-python:
+    build:
+      context: .
+      dockerfile: config/ros-python/Dockerfile
+    container_name: ros-python
+    # depends_on:
+    #   - ros-roscore
+    # environment:
+    #   - ROS_MASTER_URI=http://ros-roscore:11311
+    #   - ROS_HOSTNAME=ros-python
+    volumes:
+      - ./bags:/bags
+      - ./scripts:/scripts
+      - ./config/ros-python/aliases.sh:/root/.bash_aliases
+    tty: true
+    stdin_open: true
 
   nes-query:
     image: curlimages/curl:latest
@@ -55,4 +51,4 @@ services:
         curl -X POST http://${COORDINATOR_IP}:${REST_PORT}/v1/nes/query/execute-query \
           -H 'cache-control: no-cache' \
           -H 'content-type: application/json' \
-          -d '{"userQuery": "Query::from(\"gps_position\").filter((((-0.0005116665054459)*(Attribute(\"position_y\")-46.3394657872912))-((-0.000144921834274)*(Attribute(\"position_x\")-3.4336703724841016)) < 0) || (((0.0000918375775427)*(Attribute(\"position_y\")-46.339320865456926))-((-0.000430238957761)*(Attribute(\"position_x\")-3.4331587059786557)) < 0) || (((0.0007347006235818)*(Attribute(\"position_y\")-46.338890626499165))-((0.000280787913965)*(Attribute(\"position_x\")-3.4332505435561984)) < 0) || (((-0.0003148716956786)*(Attribute(\"position_y\")-46.33917141441313))-((0.00029437287807)*(Attribute(\"position_x\")-3.4339852441797802)) < 0)).sink(MQTTSinkDescriptor::create(\"ws://192.168.0.163:9001\", \"field-filter\"));", "placement": "BottomUp"}'
+          -d '{"userQuery": "Query::from(\"gps_position\").filter((((-0.0005116665054459)*(Attribute(\"position_y\")-46.3394657872912))-((-0.000144921834274)*(Attribute(\"position_x\")-3.4336703724841016)) < 0) || (((0.0000918375775427)*(Attribute(\"position_y\")-46.339320865456926))-((-0.000430238957761)*(Attribute(\"position_x\")-3.4331587059786557)) < 0) || (((0.0007347006235818)*(Attribute(\"position_y\")-46.338890626499165))-((0.000280787913965)*(Attribute(\"position_x\")-3.4332505435561984)) < 0) || (((-0.0003148716956786)*(Attribute(\"position_y\")-46.33917141441313))-((0.00029437287807)*(Attribute(\"position_x\")-3.4339852441797802)) < 0)).sink(MQTTSinkDescriptor::create(\"ws://${WORKER_IP}:9001\", \"field-filter\"));", "placement": "BottomUp"}'

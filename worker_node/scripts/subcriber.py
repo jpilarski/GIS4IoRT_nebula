@@ -7,7 +7,7 @@ import json
 
 BROKER = "mosquitto"
 PORT = 9001
-TOPICS = ["window-demo", "simple-copy", "circle-filter"]
+TOPICS = ["field-filter"] #, "simple-copy", "circle-filter"]
 
 current_index = 0
 current_topic = None

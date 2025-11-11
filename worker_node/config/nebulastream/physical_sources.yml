@@ -9,4 +9,4 @@ physicalSources:
       type: MQTT_SOURCE
       configuration:
           url: ws://192.168.0.163:9001
-          topic: gps_odom
+          topic: gps_fix

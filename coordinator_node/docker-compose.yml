@@ -15,3 +15,7 @@ services:
     network_mode: host
     volumes:
       - ./config/nebulastream:/config/nebulastream
+  ui:
+    image: nebulastream/nes-ui-image:latest
+    network_mode: host
+    
