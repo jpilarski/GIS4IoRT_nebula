@@ -15,7 +15,29 @@ services:
     network_mode: host
     volumes:
       - ./config/nebulastream:/config/nebulastream
+  mosquitto:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config/mosquitto:/mosquitto/config
   ui:
     image: nebulastream/nes-ui-image:latest
     network_mode: host
-    
+  subscriber:
+    image: python:3-slim
+    profiles: ["subscriber"]
+    network_mode: host
+    volumes:
+      - ./scripts/subscriber.py:/app/subscriber.py
+      - ./config/subscriber/requirements.txt:/app/requirements.txt
+    command: >
+      sh -c "pip install -r /app/requirements.txt && 
+             python /app/subscriber.py ${COORDINATOR_IP} ${MQTT_PORT}"
+  query_1a:
+    image: curlimages/curl:latest
+    profiles: ["query"]
+    network_mode: host
+    volumes:
+      - ./config/query_1a:/query/
+    command: >
+      sh /query/run_query_1a.sh

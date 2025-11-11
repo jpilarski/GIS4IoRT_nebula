@@ -1,0 +1,6 @@
+#!/bin/sh
+
+curl -X POST "http://${COORDINATOR_IP}:${REST_PORT}/v1/nes/query/execute-query" \
+     -H 'cache-control: no-cache' \
+     -H 'content-type: application/json' \
+     -d '{"userQuery": "Query::from(\"gps_position\").filter((((-0.0005116665054459)*(Attribute(\"position_y\")-46.3394657872912))-((-0.000144921834274)*(Attribute(\"position_x\")-3.4336703724841016)) < 0) || (((0.0000918375775427)*(Attribute(\"position_y\")-46.339320865456926))-((-0.000430238957761)*(Attribute(\"position_x\")-3.4331587059786557)) < 0) || (((0.0007347006235818)*(Attribute(\"position_y\")-46.338890626499165))-((0.000280787913965)*(Attribute(\"position_x\")-3.4332505435561984)) < 0) || (((-0.0003148716956786)*(Attribute(\"position_y\")-46.33917141441313))-((0.00029437287807)*(Attribute(\"position_x\")-3.4339852441797802)) < 0)).sink(MQTTSinkDescriptor::create(\"ws://${COORDINATOR_IP}:${MQTT_PORT}\", \"query_1a\"));", "placement": "BottomUp"}'
