@@ -4,7 +4,7 @@ import json
 
 TOPIC = "query_1a"
 BROKER_IP = sys.argv[1]
-PORT = sys.argv[2]
+PORT = int(sys.argv[2])
 
 def on_connect(client, userdata, flags, reasonCode, properties):
     client.subscribe(TOPIC)

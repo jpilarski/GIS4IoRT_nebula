@@ -1,6 +1,7 @@
 services:
   coordinator:
     image: nebulastream/nes-executable-image:latest
+    profiles: ["all", "main"]
     command:
      - nesCoordinator
      - --coordinatorHost=${COORDINATOR_IP}
@@ -17,27 +18,30 @@ services:
       - ./config/nebulastream:/config/nebulastream
   mosquitto:
     image: eclipse-mosquitto
+    profiles: ["all", "main"]
     network_mode: host
     volumes:
       - ./config/mosquitto:/mosquitto/config
   ui:
     image: nebulastream/nes-ui-image:latest
+    profiles: ["all", "main"]
     network_mode: host
   subscriber:
     image: python:3-slim
-    profiles: ["subscriber"]
+    profiles: ["all", "subscriber"]
     network_mode: host
     volumes:
-      - ./scripts/subscriber.py:/app/subscriber.py
-      - ./config/subscriber/requirements.txt:/app/requirements.txt
+      - ./scripts:/scripts
+      - ./config/subscriber:/config
     command: >
-      sh -c "pip install -r /app/requirements.txt && 
-             python /app/subscriber.py ${COORDINATOR_IP} ${MQTT_PORT}"
+      sh -c "pip install -r /config/requirements && 
+             python /scripts/subscriber.py ${COORDINATOR_IP} ${MQTT_PORT}"
   query_1a:
     image: curlimages/curl:latest
-    profiles: ["query"]
+    profiles: ["all", "query"]
     network_mode: host
     volumes:
       - ./config/query_1a:/query/
     command: >
       sh /query/run_query_1a.sh
+    env_file: .env
