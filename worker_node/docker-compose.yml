@@ -13,14 +13,15 @@ services:
     volumes:
       - ./config/mosquitto:/mosquitto/config
   ros2_play:
-    image: ros:jazzy-ros-base
+    build:
+      context: .
+      dockerfile: config/ros2_play/Dockerfile
     profiles: ["all", "ros2_play"]
     network_mode: host
-    tty: true
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2", "-r", "5.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
-
+    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "5.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
+    env_file: .env
   ros2_mqtt:
     build:
       context: .
