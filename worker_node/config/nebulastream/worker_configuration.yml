@@ -9,5 +9,5 @@ physicalSources:
       physicalSourceName: robots_leader_follower
       type: MQTT_SOURCE
       configuration:
-          url: ws://192.168.0.163:9001
+          url: ws://10.160.56.181:9001 # ws://192.168.0.163:9001
           topic: gps_fix

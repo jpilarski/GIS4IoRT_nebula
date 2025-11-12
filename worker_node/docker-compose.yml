@@ -16,6 +16,7 @@ services:
     image: ros:jazzy-ros-base
     profiles: ["all", "ros2_play"]
     network_mode: host
+    tty: true
     volumes:
       - ./bags:/bags
     command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2", "-r", "5.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
