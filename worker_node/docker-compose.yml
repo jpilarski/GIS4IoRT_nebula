@@ -18,7 +18,7 @@ services:
     network_mode: host
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/rorbots_follower_leader_parcelle_1MONT_ros2", "-r", "10.0"]
+    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2", "-r", "5.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
 
   ros2_mqtt:
     build:
@@ -28,5 +28,5 @@ services:
     network_mode: host
     volumes:
       - ./scripts:/scripts
-    command: ["python", "/scripts/ros2_mqtt.py", "${WORKER_IP}", "${MQTT_PORT}"]
+    command: ["python3", "/scripts/ros2_mqtt.py", "${WORKER_IP}", "${MQTT_PORT}"]
     env_file: .env
