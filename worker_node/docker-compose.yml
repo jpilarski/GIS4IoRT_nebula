@@ -13,12 +13,13 @@ services:
     volumes:
       - ./config/mosquitto:/mosquitto/config
   ros2_play:
-    image: ros:humble-ros-core
+    image: ros:jazzy-ros-base
     profiles: ["all", "ros2_play"]
     network_mode: host
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/france_robot_ros2", "-r", "10.0"]
+    command: ["ros2", "bag", "play", "/bags/france/rorbots_follower_leader_parcelle_1MONT_ros2", "-r", "10.0"]
+
   ros2_mqtt:
     build:
       context: .

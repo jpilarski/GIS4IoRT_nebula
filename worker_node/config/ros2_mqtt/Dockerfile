@@ -1,4 +1,4 @@
-FROM ros:humble-ros-core
+FROM ros:jazzy-ros-base
 
 RUN apt-get update && apt-get install -y \
     python3-pip \
