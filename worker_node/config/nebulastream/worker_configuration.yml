@@ -5,7 +5,7 @@ workerId: 2
 
 physicalSources:
     - logicalSourceName: gps_position
-      physicalSourceName: robot_1
+      physicalSourceName: robots_leader_follower
       type: MQTT_SOURCE
       configuration:
           url: ws://192.168.0.163:9001

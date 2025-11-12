@@ -2,6 +2,9 @@ services:
   coordinator:
     image: nebulastream/nes-executable-image:latest
     profiles: ["all", "main"]
+    network_mode: host
+    volumes:
+      - ./config/nebulastream:/config/nebulastream
     command:
      - nesCoordinator
      - --coordinatorHost=${COORDINATOR_IP}
@@ -14,9 +17,6 @@ services:
      - --worker.workerId=${WORKER_ID}
      - --logLevel=LOG_WARNING
      - --configPath=/config/nebulastream/logical_sources.yml
-    network_mode: host
-    volumes:
-      - ./config/nebulastream:/config/nebulastream
   mosquitto:
     image: eclipse-mosquitto
     profiles: ["all", "main"]
@@ -33,13 +33,13 @@ services:
       dockerfile: config/subscriber/Dockerfile
     profiles: ["all", "subscriber"]
     network_mode: host
-    env_file: .env
     volumes:
       - ./scripts:/scripts
     command: ["python", "/scripts/subscriber.py", "${COORDINATOR_IP}", "${MQTT_PORT}"]
+    env_file: .env
   query_1a:
     image: curlimages/curl:latest
-    profiles: ["all", "query"]
+    profiles: ["all", "query_1a"]
     network_mode: host
     volumes:
       - ./config/query_1a:/query/
