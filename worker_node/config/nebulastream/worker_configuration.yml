@@ -1,6 +1,6 @@
-coordinatorHost: 192.168.0.153 # 10.160.45.13
+coordinatorHost: 10.160.45.13 # 192.168.0.153
 coordinatorPort: 4000
-localWorkerHost: 192.168.0.163 # 10.160.56.181
+localWorkerHost: 10.160.56.181 # 192.168.0.163
 workerId: 2
 logLevel: LOG_WARNING
 
@@ -9,5 +9,5 @@ physicalSources:
       physicalSourceName: robots_leader_follower
       type: MQTT_SOURCE
       configuration:
-          url: ws://192.168.0.163:9001 # ws://10.160.56.181:9001
+          url: ws://10.160.56.181:9001 # ws://192.168.0.163:9001
           topic: gps_fix
