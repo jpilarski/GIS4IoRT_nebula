@@ -28,8 +28,9 @@ class Ros2MqttBridge(Node):
         self.process_and_publish(msg, robot_id=1)
 
     def process_and_publish(self, msg, robot_id):
+        timestamp = msg.header.stamp.to_nsec() // 1_000_000
         data = {
-            "timestamp": time.time(),
+            "timestamp": timestamp,
             "robot_id": robot_id,
             "position_x": msg.latitude,
             "position_y": msg.longitude
