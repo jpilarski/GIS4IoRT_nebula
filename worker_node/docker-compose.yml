@@ -21,7 +21,7 @@ services:
     network_mode: host
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "7.5", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
+    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "5.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
     env_file: .env
   ros2_mqtt:
     build:
