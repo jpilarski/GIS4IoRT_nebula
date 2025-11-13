@@ -33,8 +33,8 @@ class Ros2MqttBridge(Node):
         data = {
             "timestamp": timestamp,
             "robot_id": robot_id,
-            "position_x": msg.latitude,
-            "position_y": msg.longitude
+            "position_x": msg.longitude,
+            "position_y": msg.latitude
         }
         try:
             payload = json.dumps(data)
