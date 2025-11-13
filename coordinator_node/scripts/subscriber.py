@@ -26,8 +26,6 @@ client.on_message = on_message
 
 client.connect(BROKER_IP, PORT, 60)
 
-print("Listening for query_1a results", flush=True)
-
 try:
     client.loop_forever()
 except KeyboardInterrupt:
