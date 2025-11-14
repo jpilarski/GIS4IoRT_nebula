@@ -5,8 +5,9 @@ workerId: 2
 logLevel: LOG_WARNING
 
 physicalSources:
-    - logicalSourceName: gps_position
-      physicalSourceName: robots_leader_follower
-      type: MQTT_SOURCE
-      configuration:
-          url: ws://192.168.0.163:9001 # ws://10.160.56.181:9001          topic: gps_fix
+  - logicalSourceName: gps_position
+    physicalSourceName: robots_leader_follower
+    type: MQTT_SOURCE
+    configuration:
+      url: ws://192.168.0.163:9001 # ws://10.160.56.181:9001
+      topic: gps_fix
