@@ -1,0 +1,38 @@
+rosbag2_bagfile_information:
+  version: 9
+  storage_identifier: sqlite3
+  duration:
+    nanoseconds: 1334148000000
+  starting_time:
+    nanoseconds_since_epoch: 952000000
+  message_count: 40024
+  topics_with_message_count:
+    - topic_metadata:
+        name: /leader/gps/fix
+        type: sensor_msgs/msg/NavSatFix
+        serialization_format: cdr
+        offered_qos_profiles:
+          []
+        type_description_hash: RIHS01_62223ab3fe210a15976021da7afddc9e200dc9ec75231c1b6a557fc598a65404
+      message_count: 13340
+    - topic_metadata:
+        name: /leader/localisation/filtered_odom
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles:
+          []
+        type_description_hash: RIHS01_3cc97dc7fb7502f8714462c526d369e35b603cfc34d946e3f2eda2766dfec6e0
+      message_count: 26684
+  compression_format: ""
+  compression_mode: ""
+  relative_file_paths:
+    - leader_data.db3
+  files:
+    - path: leader_data.db3
+      starting_time:
+        nanoseconds_since_epoch: 952000000
+      duration:
+        nanoseconds: 1334148000000
+      message_count: 40024
+  custom_data: ~
+  ros_distro: jazzy
