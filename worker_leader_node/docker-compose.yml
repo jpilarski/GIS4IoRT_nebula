@@ -12,9 +12,15 @@ services:
     profiles: ["all", "main"]
     network_mode: host
     environment:
+<<<<<<< HEAD
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:${KAFKA_PORT},CONTROLLER://:${KAFKA_CONTROLLER_PORT}
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${WORKER_IP}:${KAFKA_PORT}
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@127.0.0.1:${KAFKA_CONTROLLER_PORT}
+=======
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@127.0.0.1:${KAFKA_CONTROLLER_PORT}
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:${KAFKA_PORT},CONTROLLER://:${KAFKA_CONTROLLER_PORT}
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${WORKER_IP}:${KAFKA_PORT}
+>>>>>>> 4658b07ccbd2dcc5fac18370bd7e42f2b2a43e77
     env_file: .env
   ros2_play:
     build:
@@ -24,7 +30,7 @@ services:
     network_mode: host
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "10.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
+    command: ["ros2", "bag", "play", "/bags/${ROBOT_FILE}", "-r", "10.0"]
     env_file: .env
   ros2_kafka:
     build:
@@ -34,5 +40,9 @@ services:
     network_mode: host
     volumes:
       - ./scripts:/scripts
+<<<<<<< HEAD
     command: ["python3", "/scripts/ros2_kafka.py", "${WORKER_IP}", "${KAFKA_PORT}"] 
+=======
+    command: ["python3", "/scripts/ros2_kafka.py", "${WORKER_IP}", "${KAFKA_PORT}"]
+>>>>>>> 4658b07ccbd2dcc5fac18370bd7e42f2b2a43e77
     env_file: .env
