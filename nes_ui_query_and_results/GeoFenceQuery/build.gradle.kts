@@ -15,5 +15,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("org.chistera.JavaClient")
+    mainClass.set("org.chistera.GeoFenceQuery")
 }

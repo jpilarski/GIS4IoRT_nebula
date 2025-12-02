@@ -31,16 +31,10 @@ public class GeoFenceQuery {
     }
 
     static class GeoFence implements MapFunction<GPS_PositionInput, GPS_PositionOutput> {
-
         private final Path2D.Double field;
 
-        public GeoFence() {
-            this.field = new Path2D.Double();
-            field.moveTo(3.4336703724841016, 46.3394657872912);
-            field.lineTo(3.4331587059786557, 46.339320865456926);
-            field.lineTo(3.4332505435561984, 46.338890626499165);
-            field.lineTo(3.4339852441797802, 46.33917141441313);
-            field.closePath();
+        public GeoFence(Path2D.Double field) {
+            this.field = field;
         }
 
         @Override
@@ -54,14 +48,58 @@ public class GeoFenceQuery {
         }
     }
 
-    public static void main(String[] args) throws IOException, RESTException, InterruptedException {
+    public static void main(String[] args) {
+        // 1. Sprawdzenie parametru 'continuous'
+        if (args.length < 3 || !"continuous".equalsIgnoreCase(args[0])) {
+            System.out.println("Skipping execution. First argument must be 'continuous'.");
+            return;
+        }
 
-        NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime("192.168.0.151", 8081);
-        Query query = nebulaStreamRuntime.readFromSource("gps_position");
-        query.map(new GeoFence());
-        query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("robot_id").apply(sum("exited"));
-        query.filter(attribute("exited").greaterThan(0));
-        query.sink(new MQTTSink("ws://192.168.0.151:9001", "query_1a", "user", 1000, MQTTSink.TimeUnits.milliseconds, 0, MQTTSink.ServiceQualities.atLeastOnce, true));
-        int queryId = nebulaStreamRuntime.executeQuery(query, "BottomUp");
+        String csvPath = args[1];
+        String queryName = args[2];
+
+        // 2. Pobranie zmiennych środowiskowych
+        String nesIp = System.getenv("NES_COORDINATOR_IP");
+        String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
+        String mqttIp = System.getenv("QUERY_HOST_IP");
+        String mqttPortStr = System.getenv("QUERY_HOST_MQTT_PORT");
+
+        // Walidacja zmiennych env (opcjonalna, ale dobra dla debuggowania)
+        if (nesIp == null || nesPortStr == null || mqttIp == null || mqttPortStr == null) {
+            System.err.println("Missing ENV variables. Check .env file.");
+            System.exit(1);
+        }
+
+        int nesPort = Integer.parseInt(nesPortStr);
+        String mqttUrl = "ws://" + mqttIp + ":" + mqttPortStr;
+
+        try {
+            // 3. Wczytanie pliku
+            System.out.println("Loading field shape from: " + csvPath);
+            Path2D.Double fieldShape = GeoUtils.loadFieldShape(csvPath);
+
+            // 4. Logika NebulaStream
+            NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
+            Query query = nebulaStreamRuntime.readFromSource("gps_position");
+            
+            query.map(new GeoFence(fieldShape)); // Przekazujemy kształt do konstruktora
+            
+            query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
+                 .byKey("robot_id")
+                 .apply(sum("exited"));
+            
+            query.filter(attribute("exited").greaterThan(0));
+            
+            query.sink(new MQTTSink(mqttUrl, queryName, "user", 1000, 
+                       MQTTSink.TimeUnits.milliseconds, 0, 
+                       MQTTSink.ServiceQualities.atLeastOnce, true));
+            
+            int queryId = nebulaStreamRuntime.executeQuery(query, "BottomUp");
+            System.out.println("Query started with ID: " + queryId);
+
+        } catch (IOException | RESTException | InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

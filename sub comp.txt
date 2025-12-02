@@ -1,0 +1,10 @@
+  # subscriber:
+  #   build:
+  #     context: .
+  #     dockerfile: config/subscriber/Dockerfile
+  #   profiles: ["all", "subscriber"]
+  #   network_mode: host
+  #   volumes:
+  #     - ./scripts:/scripts
+  #   command: ["python", "/scripts/subscriber.py", "${COORDINATOR_IP}", "${MQTT_PORT}"]
+  #   env_file: .env

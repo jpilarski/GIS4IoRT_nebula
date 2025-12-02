@@ -15,8 +15,3 @@ services:
       - --logLevel=LOG_WARNING
       - --configPath=/config/nes/logical_sources.yml
     env_file: .env
-  mosquitto:
-    image: eclipse-mosquitto
-    network_mode: host
-    volumes:
-      - ./config/mosquitto:/mosquitto/config
