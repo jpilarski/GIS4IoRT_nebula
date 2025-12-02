@@ -1,48 +1,22 @@
 services:
-  coordinator:
+  nes_coordinator:
     image: nebulastream/nes-executable-image:latest
-    profiles: ["all", "main"]
     network_mode: host
     volumes:
-      - ./config/nebulastream:/config/nebulastream
+      - ./config/nebulastream:/config/nes
     command:
-     - nesCoordinator
-     - --coordinatorHost=${COORDINATOR_IP}
-     - --restIp=${COORDINATOR_IP}
-     - --restPort=${REST_PORT}
-     - --rpcPort=${RPC_PORT}
-     - --worker.coordinatorHost=${COORDINATOR_IP}
-     - --worker.coordinatorPort=${RPC_PORT}
-     - --worker.localWorkerHost=${COORDINATOR_IP}
-     - --worker.workerId=${WORKER_ID}
-     - --logLevel=LOG_WARNING
-     - --configPath=/config/nebulastream/logical_sources.yml
+      - nesCoordinator
+      - --coordinatorHost=${NES_COORDINATOR_IP}
+      - --restIp=${NES_COORDINATOR_IP}
+      - --restPort=${NES_COORDINATOR_REST_PORT}
+      - --rpcPort=${NES_COORDINATOR_RPC_PORT}
+      - --worker.coordinatorHost=${NES_COORDINATOR_IP}
+      - --worker.coordinatorPort=${NES_COORDINATOR_RPC_PORT}
+      - --logLevel=LOG_WARNING
+      - --configPath=/config/nes/logical_sources.yml
     env_file: .env
   mosquitto:
     image: eclipse-mosquitto
-    profiles: ["all", "main"]
     network_mode: host
     volumes:
       - ./config/mosquitto:/mosquitto/config
-  ui:
-    image: nebulastream/nes-ui-image:latest
-    profiles: ["all", "main"]
-    network_mode: host
-  subscriber:
-    build:
-      context: .
-      dockerfile: config/subscriber/Dockerfile
-    profiles: ["all", "subscriber"]
-    network_mode: host
-    volumes:
-      - ./scripts:/scripts
-    command: ["python", "/scripts/subscriber.py", "${COORDINATOR_IP}", "${MQTT_PORT}"]
-    env_file: .env
-  query_1a:
-    image: curlimages/curl:latest
-    profiles: ["all", "query_1a"]
-    network_mode: host
-    volumes:
-      - ./config/query_1a:/query/
-    command: ["sh", "/query/run_query_1a.sh"]
-    env_file: .env
