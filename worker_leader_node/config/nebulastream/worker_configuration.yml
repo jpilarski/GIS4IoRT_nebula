@@ -6,8 +6,8 @@ logLevel: LOG_WARNING
 
 physicalSources:
   - logicalSourceName: gps_position
-    physicalSourceName: robots_leader_follower
-    type: MQTT_SOURCE
+    physicalSourceName: leader_gps_fix
+    type: KAFKA_SOURCE
     configuration:
-      url: ws://192.168.0.163:9001
+      brokers: 192.168.0.163:9092
       topic: gps_fix

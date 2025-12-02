@@ -7,4 +7,4 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     
-RUN pip3 install paho-mqtt --break-system-packages --no-cache-dir
+RUN pip3 install kafka-python --break-system-packages --no-cache-dir

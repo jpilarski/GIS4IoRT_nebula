@@ -7,12 +7,15 @@ services:
       - ./config/nebulastream:/config/nebulastream
     command: ["nesWorker", "--configPath=/config/nebulastream/worker_configuration.yml"]
     env_file: .env
-  mosquitto:
-    image: eclipse-mosquitto
+  kafka:
+    image: bitnami/kafka:latest
     profiles: ["all", "main"]
     network_mode: host
-    volumes:
-      - ./config/mosquitto:/mosquitto/config
+    environment:
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:${KAFKA_PORT},CONTROLLER://:${KAFKA_CONTROLLER_PORT}
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${WORKER_IP}:${KAFKA_PORT}
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@127.0.0.1:${KAFKA_CONTROLLER_PORT}
+    env_file: .env
   ros2_play:
     build:
       context: .
@@ -23,13 +26,13 @@ services:
       - ./bags:/bags
     command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "10.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
     env_file: .env
-  ros2_mqtt:
+  ros2_kafka:
     build:
       context: .
-      dockerfile: config/ros2_mqtt/Dockerfile
-    profiles: ["all", "ros2_mqtt"]
+      dockerfile: config/ros2_kafka/Dockerfile
+    profiles: ["all", "ros2_kafka"]
     network_mode: host
     volumes:
       - ./scripts:/scripts
-    command: ["python3", "/scripts/ros2_mqtt.py", "${WORKER_IP}", "${MQTT_PORT}"]
+    command: ["python3", "/scripts/ros2_kafka.py", "${WORKER_IP}", "${KAFKA_PORT}"] 
     env_file: .env
