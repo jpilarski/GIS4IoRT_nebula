@@ -12,6 +12,7 @@ services:
       - --rpcPort=${NES_COORDINATOR_RPC_PORT}
       - --worker.coordinatorHost=${NES_COORDINATOR_IP}
       - --worker.coordinatorPort=${NES_COORDINATOR_RPC_PORT}
+      - --worker.localWorkerHost=${NES_COORDINATOR_IP}
       - --logLevel=LOG_WARNING
       - --configPath=/config/nes/logical_sources.yml
     env_file: .env
