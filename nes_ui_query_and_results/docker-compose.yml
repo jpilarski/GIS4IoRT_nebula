@@ -15,7 +15,6 @@ services:
       dockerfile: config/geofencequery/Dockerfile
     network_mode: host
     volumes:
-      - ./data:/data  # Mapujemy folder data, żeby Java widziała plik CSV
+      - ./data:/data
     env_file: .env
-    # Parametry: 1. Tryb 2. Ścieżka do pliku (wewnątrz kontenera) 3. Nazwa query
-    command: ["continuous", "/data/field/1_MONT.csv", "query_1a"]
+    command: [ "continuous", "/data/field/1_MONT.csv", "query_1a" ]

@@ -27,6 +27,8 @@ public class GeoFenceQuery {
     static class GPS_PositionOutput {
         long timestamp;
         long robot_id;
+        double position_x;
+        double position_y;
         int exited;
     }
 
@@ -42,6 +44,8 @@ public class GeoFenceQuery {
             GPS_PositionOutput output = new GPS_PositionOutput();
             output.timestamp = input.timestamp;
             output.robot_id = input.robot_id;
+            output.position_x = input.position_x;
+            output.position_y = input.position_y;
             boolean isInside = this.field.contains(input.position_x, input.position_y);
             output.exited = (isInside) ? 0 : 1;
             return output;
@@ -49,22 +53,19 @@ public class GeoFenceQuery {
     }
 
     public static void main(String[] args) {
-        // 1. Sprawdzenie parametru 'continuous'
-        if (args.length < 3 || !"continuous".equalsIgnoreCase(args[0])) {
-            System.out.println("Skipping execution. First argument must be 'continuous'.");
+        if (args.length < 3 || (!"continuous".equalsIgnoreCase(args[0]) && !"historical".equalsIgnoreCase(args[0]))) {
+            System.out.println("Skipping execution. First argument must be 'continuous' or 'historical'.");
             return;
         }
 
         String csvPath = args[1];
         String queryName = args[2];
 
-        // 2. Pobranie zmiennych środowiskowych
         String nesIp = System.getenv("NES_COORDINATOR_IP");
         String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
         String mqttIp = System.getenv("QUERY_HOST_IP");
         String mqttPortStr = System.getenv("QUERY_HOST_MQTT_PORT");
 
-        // Walidacja zmiennych env (opcjonalna, ale dobra dla debuggowania)
         if (nesIp == null || nesPortStr == null || mqttIp == null || mqttPortStr == null) {
             System.err.println("Missing ENV variables. Check .env file.");
             System.exit(1);
@@ -74,19 +75,19 @@ public class GeoFenceQuery {
         String mqttUrl = "ws://" + mqttIp + ":" + mqttPortStr;
 
         try {
-            // 3. Wczytanie pliku
             System.out.println("Loading field shape from: " + csvPath);
             Path2D.Double fieldShape = GeoUtils.loadFieldShape(csvPath);
 
-            // 4. Logika NebulaStream
             NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
             Query query = nebulaStreamRuntime.readFromSource("gps_position");
             
-            query.map(new GeoFence(fieldShape)); // Przekazujemy kształt do konstruktora
-            
-            query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
-                 .byKey("robot_id")
-                 .apply(sum("exited"));
+            query.map(new GeoFence(fieldShape));
+
+            if("continuous".equalsIgnoreCase(args[0])) {
+                query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
+                     .byKey("robot_id")
+                     .apply(sum("exited"));
+            }
             
             query.filter(attribute("exited").greaterThan(0));
             
@@ -96,6 +97,10 @@ public class GeoFenceQuery {
             
             int queryId = nebulaStreamRuntime.executeQuery(query, "BottomUp");
             System.out.println("Query started with ID: " + queryId);
+            if("historical".equalsIgnoreCase(args[0])) {
+                Thread.sleep(60000);
+                nebulaStreamRuntime.stopQuery(queryId);
+            }
 
         } catch (IOException | RESTException | InterruptedException e) {
             e.printStackTrace();
