@@ -1,1 +1,1 @@
-# Nebula Stream for GIS4IoRT project
+# NebulaStream for GIS4IoRT Chist-Era project
