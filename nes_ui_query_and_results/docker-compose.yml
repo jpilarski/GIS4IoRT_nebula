@@ -9,6 +9,17 @@ services:
     image: nebulastream/nes-ui-image:latest
     network_mode: host
 
+  subscriber:
+    profiles: ["subscriber"]
+    build:
+      context: .
+      dockerfile: config/subscriber/Dockerfile
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+    command: ["python", "/scripts/subscriber.py", "${QUERY_HOST_IP}", "${QUERY_HOST_MQTT_PORT}", "query_1a"]
+    env_file: .env
+
   geofence_continuous_query:
     profiles: ["1a"]
     build:
@@ -18,7 +29,7 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: [ "continuous", "/data/field/1_MONT.csv", "query_1a" ]
+    command: ["continuous", "/data/field/1_MONT.csv", "query_1a"]
 
   geofence_historical_query:
     profiles: ["1b"]
@@ -29,4 +40,4 @@ services:
     volumes:
       - ./data:/data
     env_file: .env
-    command: [ "historical", "/data/field/1_MONT.csv", "query_1b" ]
+    command: ["historical", "/data/field/1_MONT.csv", "query_1b"]

@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import sys
 import json
 
-TOPIC = "query_1a"
+TOPIC = sys.argv[3]
 BROKER_IP = sys.argv[1]
 PORT = int(sys.argv[2])
 
