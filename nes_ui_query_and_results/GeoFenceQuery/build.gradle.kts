@@ -1,6 +1,6 @@
 plugins {
+    java
     application
-    id("java")
 }
 
 group = "org.chistera"
@@ -16,4 +16,13 @@ dependencies {
 
 application {
     mainClass.set("org.chistera.GeoFenceQuery")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.chistera.GeoFenceQuery"
+    }
+    from(sourceSets.main.get().output)
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
