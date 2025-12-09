@@ -10,6 +10,7 @@ services:
     network_mode: host
 
   geofence_continuous_query:
+    profiles: ["1a"]
     build:
       context: .
       dockerfile: config/geofencequery/Dockerfile
@@ -18,3 +19,14 @@ services:
       - ./data:/data
     env_file: .env
     command: [ "continuous", "/data/field/1_MONT.csv", "query_1a" ]
+
+  geofence_historical_query:
+    profiles: ["1b"]
+    build:
+      context: .
+      dockerfile: config/geofencequery/Dockerfile
+    network_mode: host
+    volumes:
+      - ./data:/data
+    env_file: .env
+    command: [ "historical", "/data/field/1_MONT.csv", "query_1b" ]
