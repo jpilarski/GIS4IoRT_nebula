@@ -1,12 +1,14 @@
 services:
   worker:
     image: nebulastream/nes-executable-image:latest
-    profiles: ["all", "main"]
     network_mode: host
     volumes:
       - ./config/nebulastream:/config/nebulastream
-    command: ["nesWorker", "--configPath=/config/nebulastream/worker_configuration.yml"]
+    command: 
+      - nesWorker
+      - --configPath=/config/nebulastream/worker_configuration.yml
     env_file: .env
+    
   kafka:
     image: bitnami/kafka:latest
     profiles: ["all", "main"]
