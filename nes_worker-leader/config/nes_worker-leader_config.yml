@@ -1,0 +1,13 @@
+coordinatorHost: 0.0.0.0
+coordinatorPort: 4000
+localWorkerHost: 0.0.0.0
+workerId: 2
+logLevel: LOG_WARNING
+
+physicalSources:
+  - logicalSourceName: gps_position
+    physicalSourceName: leader
+    type: MQTT_SOURCE
+    configuration:
+      url: ws://0.0.0.0:0
+      topic: leader_gps_fix
