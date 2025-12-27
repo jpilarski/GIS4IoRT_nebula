@@ -1,4 +1,5 @@
 services:
+
   nes_worker-leader:
     image: nebulastream/nes-executable-image:latest
     network_mode: host
@@ -8,9 +9,10 @@ services:
       - nesWorker
       - --configPath=/config/nes_worker-leader_config.yml
     env_file: .env
+
   mosquitto:
     image: eclipse-mosquitto
-    profiles: ["all", "main"]
+    profiles: [ "all", "main" ]
     network_mode: host
     volumes:
       - ./config/mosquitto:/mosquitto/config
@@ -18,19 +20,19 @@ services:
     build:
       context: .
       dockerfile: config/ros2_play/Dockerfile
-    profiles: ["all", "ros2_play"]
+    profiles: [ "all", "ros2_play" ]
     network_mode: host
     volumes:
       - ./bags:/bags
-    command: ["ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "10.0", "--topics", "/leader/gps/fix", "/follower/gps/fix"]
+    command: [ "ros2", "bag", "play", "/bags/france/leader_follower_ros2/", "-r", "10.0", "--topics", "/leader/gps/fix", "/follower/gps/fix" ]
     env_file: .env
   ros2_mqtt:
     build:
       context: .
       dockerfile: config/ros2_mqtt/Dockerfile
-    profiles: ["all", "ros2_mqtt"]
+    profiles: [ "all", "ros2_mqtt" ]
     network_mode: host
     volumes:
       - ./scripts:/scripts
-    command: ["python3", "/scripts/ros2_mqtt.py", "${WORKER_IP}", "${MQTT_PORT}"]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${WORKER_IP}", "${MQTT_PORT}" ]
     env_file: .env
