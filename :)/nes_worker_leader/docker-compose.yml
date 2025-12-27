@@ -1,27 +1,3 @@
-services:
-  nes_worker_leader:
-    image: nebulastream/nes-executable-image:latest
-    network_mode: host
-    volumes:
-      - ./config:/config
-    command:
-      - nesWorker
-      - --configPath=/config/nes_worker_leader_config.yml
-    env_file: .env
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    network_mode: host
-    environment:
-      - KAFKA_NODE_ID=0
-      - KAFKA_PROCESS_ROLES=broker,controller
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_LISTENERS=PLAINTEXT://:${KAFKA_PORT},CONTROLLER://:${KAFKA_CONTROLLER_PORT}
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${NES_WORKER_LEADER_IP}:${KAFKA_PORT}
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=0@127.0.0.1:${KAFKA_CONTROLLER_PORT}
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    env_file: .env
 
   # ros2_play:
   #   build:
