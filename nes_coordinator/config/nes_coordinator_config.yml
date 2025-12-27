@@ -3,8 +3,8 @@ logicalSources:
     fields:
       - name: timestamp
         type: UINT64
-      - name: robot_id
-        type: UINT64
+      - name: robot_name
+        type: text
       - name: position_x
         type: FLOAT64
       - name: position_y
