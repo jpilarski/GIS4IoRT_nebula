@@ -1,4 +1,5 @@
 services:
+
   nes_coordinator:
     image: nebulastream/nes-executable-image:latest
     network_mode: host

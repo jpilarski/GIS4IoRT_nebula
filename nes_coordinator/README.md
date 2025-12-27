@@ -1,3 +1,3 @@
 # Coordinator
 
-Update the .env file. 
+Update the .env file.
