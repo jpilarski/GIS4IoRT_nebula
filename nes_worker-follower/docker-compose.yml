@@ -1,0 +1,37 @@
+services:
+
+  nes_worker-follower:
+    image: nebulastream/nes-executable-image:latest
+    network_mode: host
+    volumes:
+      - ./config:/config
+    command:
+      - nesWorker
+      - --configPath=/config/nes_worker-follower_config.yml
+    env_file: .env
+
+  mosquitto:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config:/mosquitto/config
+
+  ros2_play:
+    build:
+      context: .
+      dockerfile: config/Dockerfile
+    network_mode: host
+    volumes:
+      - ../ros2_bags:/bags
+    command: [ "ros2", "bag", "play", "/bags/${ROBOT_NAME}" ]
+    env_file: .env
+
+  ros2_mqtt:
+    build:
+      context: .
+      dockerfile: config/Dockerfile
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${NES_WORKER_IP}", "${MQTT_PORT}", "${ROBOT_NAME}" ]
+    env_file: .env
