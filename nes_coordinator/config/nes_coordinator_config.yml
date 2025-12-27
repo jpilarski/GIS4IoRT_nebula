@@ -4,7 +4,7 @@ logicalSources:
       - name: timestamp
         type: UINT64
       - name: robot_name
-        type: text
+        type: TEXT
       - name: position_x
         type: FLOAT64
       - name: position_y
