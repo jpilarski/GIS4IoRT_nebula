@@ -1,7 +1,0 @@
-logicalSources:
-  - logicalSourceName: temporary
-    fields:
-      - name: p_x
-        type: FLOAT64
-      - name: p_y
-        type: FLOAT64
