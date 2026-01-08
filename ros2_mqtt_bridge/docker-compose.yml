@@ -1,15 +1,5 @@
 services:
 
-  nes_worker-follower:
-    image: nebulastream/nes-executable-image:latest
-    network_mode: host
-    volumes:
-      - ./config:/config
-    command:
-      - nesWorker
-      - --configPath=/config/nes_worker-follower_config.yml
-    env_file: .env
-
   mosquitto:
     image: eclipse-mosquitto
     network_mode: host
@@ -33,5 +23,5 @@ services:
     network_mode: host
     volumes:
       - ./scripts:/scripts
-    command: [ "python3", "/scripts/ros2_mqtt.py", "${NES_WORKER_IP}", "${MQTT_PORT}", "${ROBOT_NAME}" ]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME}" ]
     env_file: .env
