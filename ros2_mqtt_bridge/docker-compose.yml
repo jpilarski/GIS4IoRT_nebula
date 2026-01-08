@@ -23,5 +23,5 @@ services:
     network_mode: host
     volumes:
       - ./scripts:/scripts
-    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME}" ]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME}", "${ROS2_TOPIC}", "${MQTT_TOPIC}" ]
     env_file: .env

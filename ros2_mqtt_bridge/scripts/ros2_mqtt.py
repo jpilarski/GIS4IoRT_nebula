@@ -5,17 +5,19 @@ import paho.mqtt.client as mqtt
 import sys, json, time
 
 class Ros2MqttBridge(Node):
-    def __init__(self, mqtt_client, robot_name):
+    def __init__(self, mqtt_client, robot_name, ros2_topic, mqtt_topic):
         super().__init__('ros2_mqtt_bridge')
         self.mqtt_client = mqtt_client
         self.robot_name = robot_name
+        self.ros2_topic = ros2_topic
+        self.mqtt_topic = mqtt_topic
 
         self.create_subscription(
             NavSatFix, 
-            f'/{robot_name}/gps/fix', 
+            self.ros2_topic,
             self.callback, 
             10)
-        self.get_logger().info(f"Bridge started for robot: {robot_name}")
+        self.get_logger().info(f"Bridge started for {self.robot_name}")
 
     def callback(self, msg):
         payload = {
@@ -27,18 +29,19 @@ class Ros2MqttBridge(Node):
             "position_y": msg.latitude
         }
         try:
-            self.mqtt_client.publish(f"{self.robot_name}_gps_fix", json.dumps(payload))
+            self.mqtt_client.publish(self.mqtt_topic, json.dumps(payload))
         except Exception as e:
             self.get_logger().error(f"MQTT publish failed: {e}")
 
 def main():
-    if len(sys.argv) < 4:
-        print("Usage: python3 script.py <IP> <PORT> <ROBOT_NAME>")
+    if len(sys.argv) < 6:
+        print("Usage: python3 script.py <IP> <PORT> <ROBOT_NAME> <ROS2_TOPIC> <MQTT_TOPIC>")
         return
 
-    m_ip, m_port, r_name = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+    m_ip, m_port, r_name, r_topic, m_topic = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5]
 
     client = mqtt.Client(
+        client_id=f"{r_name}_mqtt_bridge",
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
         transport="websockets",
         protocol=mqtt.MQTTv5
@@ -49,7 +52,7 @@ def main():
         client.loop_start()
 
         rclpy.init()
-        node = Ros2MqttBridge(client, r_name)
+        node = Ros2MqttBridge(client, r_name, r_topic, m_topic)
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
