@@ -25,4 +25,9 @@
 
 5. Repeat steps 3-4 for each robot and worker on another machine
 
-6. Submit the query
+6. In folder `/nes_query_results_ui` (on machine 1 or another than with worker):
+    * Update the `NES_COORDINATOR_IP` in the `.env` file to match `NES_COORDINATOR_IP` from point 2.
+    * Update the `QUERY_HOST_IP` and `QUERY_NAME`
+    * Run `docker compose pull` and `docker compose build`
+    * Run `docker compose up mosquitto -d` and `docker compose up nes_ui -d` and `docker compose up subscriber`
+    * Open NES UI (port 9000) and type in `NES_COORDINATOR_IP:8081`
