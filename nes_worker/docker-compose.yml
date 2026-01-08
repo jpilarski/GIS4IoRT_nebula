@@ -8,4 +8,3 @@ services:
     command:
       - nesWorker
       - --configPath=/config/nes_worker_config.yml
-    env_file: .env
