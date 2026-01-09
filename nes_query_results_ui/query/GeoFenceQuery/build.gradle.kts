@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation("stream.nebula:nebulastream-java-client:0.0.93")
+    implementation("org.locationtech.jts:jts-core:1.19.0")
 }
 
 application {

@@ -20,12 +20,12 @@ services:
     command: [ "python", "/scripts/subscriber.py", "${QUERY_HOST_IP}", "${QUERY_HOST_MQTT_PORT}", "${QUERY_NAME}" ]
     env_file: .env
 
-  # geofence_query:
-  #   build:
-  #     context: .
-  #     dockerfile: config/Dockerfile.query
-  #   network_mode: host
-  #   volumes:
-  #     - ./data:/data
-  #   env_file: .env
-  #   command: [ "/data/field/1_MONT.csv", "${QUERY_NAME}" ]
+  geofence_query:
+    build:
+      context: .
+      dockerfile: config/Dockerfile.query
+    network_mode: host
+    volumes:
+      - ./data:/data
+    env_file: .env
+    command: [ "/data/field/1_MONT.txt", "${QUERY_NAME}" ]

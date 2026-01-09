@@ -2,8 +2,8 @@ FROM gradle:8.5-jdk17 AS builder
 
 WORKDIR /home/gradle/project
 
-COPY GeoFenceQuery/settings.gradle.kts GeoFenceQuery/build.gradle.kts ./
-COPY GeoFenceQuery/src ./src
+COPY query/GeoFenceQuery/settings.gradle.kts GeoFenceQuery/build.gradle.kts ./
+COPY query/GeoFenceQuery/src ./src
 
 RUN gradle clean shadowJar --no-daemon
 
