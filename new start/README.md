@@ -41,7 +41,13 @@
     * Run services: `docker compose up mosquitto -d` and `docker compose up humidity_producer`
 
 7. **On the same Machine (Humidity Worker):**
-    * Update `url` if `MQTT_IP` was changed in Step 7
+    Navigate to the `/nes_humidity_worker` directory:
+    * Open `config/nes_humidity_worker_config.yml` and update the following:
+        * Set `coordinatorHost` to match `NES_COORDINATOR_IP` (from Step 2)
+        * Set `localWorkerHost` to the IP address of this Machine
+        * Update `workerId`
+        * Update `url` if `MQTT_IP` was changed in Step 6
+    * Run `docker compose pull` and `docker compose up`
 
 8. **On Machine 1 (or a separate machine from the worker):**
     Navigate to the `/nes_query_results_ui` directory:
