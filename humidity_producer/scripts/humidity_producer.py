@@ -47,7 +47,6 @@ class VirtualSensor:
         self.sensor_id = sensor_id
         self.x, self.y = self._generate_position(polygon)
         self.profile = profile_type
-        
         self.tick_counter = 0
         self.phase_offset = random.uniform(0, 2 * math.pi)
         self.speed_factor = random.uniform(0.5, 2.0)
@@ -66,7 +65,6 @@ class VirtualSensor:
     def get_payload(self, current_time):
         base_resolution = 20.0
         step_size = (2 * math.pi) / base_resolution
-        
         angle = (self.tick_counter * step_size * self.speed_factor) + self.phase_offset
         base_val = self.profile.get_value(angle)
         noise = random.uniform(-0.5, 0.5)
@@ -106,27 +104,21 @@ def main():
     field_file = sys.argv[3]
     num_sensors = int(sys.argv[4])
     freq_hz = float(sys.argv[5])
-    
     interval = 1.0 / freq_hz
     mqtt_topic = "humidity_producer"
-
     polygon = load_polygon(field_file)
-
     sensors = []
     available_profiles = [SineProfile(), CosineProfile(), SawtoothProfile(), TrapezoidProfile(), RandomProfile()]
-    
     for i in range(num_sensors):
         profile = random.choice(available_profiles)
         s = VirtualSensor(i, polygon, profile)
         sensors.append(s)
-    
     client = mqtt.Client(
         client_id="humidity_farm_producer",
         transport="websockets",
         protocol=mqtt.MQTTv5,
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2
     )
-    
     try:
         client.connect(mqtt_ip, mqtt_port, 60)
         client.loop_start()
@@ -141,7 +133,6 @@ def main():
                         print(f"Error: {e}")
                     sensor.schedule_next(now, interval)
             time.sleep(0.01)
-
     except KeyboardInterrupt:
         pass
     except Exception as e:

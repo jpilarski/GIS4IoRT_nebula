@@ -9,7 +9,7 @@ services:
   humidity_producer:
     build:
       context: .
-      dockerfile: config/Dockerfile
+      dockerfile: config/Dockerfile.humproducer
     network_mode: host
     volumes:
       - ./scripts:/scripts
