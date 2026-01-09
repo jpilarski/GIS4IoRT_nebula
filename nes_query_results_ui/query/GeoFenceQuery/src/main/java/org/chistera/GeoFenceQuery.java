@@ -29,7 +29,7 @@ public class GeoFenceQuery {
 
     static class GPS_PositionOutput {
         long timestamp;
-        String robot_name;
+        int robot_id;
         double position_x;
         double position_y;
         int exited;
@@ -46,7 +46,11 @@ public class GeoFenceQuery {
         public GPS_PositionOutput map(final GPS_PositionInput input) {
             GPS_PositionOutput output = new GPS_PositionOutput();
             output.timestamp = input.timestamp;
-            output.robot_name = input.robot_name;
+            if (input.robot_name.equals("leader")) {
+                output.robot_id = 0;
+            } else {
+                output.robot_id = 1;
+            }
             output.position_x = input.position_x;
             output.position_y = input.position_y;
             
@@ -78,7 +82,7 @@ public class GeoFenceQuery {
             query.map(new GeoFence(fieldShape));
             
             query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
-                 .byKey("robot_name")
+                 .byKey("robot_id")
                  .apply(sum("exited"));
             
             query.filter(attribute("exited").greaterThan(0));
