@@ -23,7 +23,7 @@ services:
   geofence_query:
     build:
       context: .
-      dockerfile: config/Dockerfile.query
+      dockerfile: config/Dockerfile.geofence
     network_mode: host
     volumes:
       - ./data:/data
