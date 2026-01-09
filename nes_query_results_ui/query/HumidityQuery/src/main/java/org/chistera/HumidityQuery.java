@@ -53,21 +53,15 @@ public class HumidityQuery {
     }
 
     static class JoinInput {
+        long gps_position$start;
         long gps_position$end;
-        long gps_position$joinKey;
+        long gps_position$robot_id;
         double gps_position$position_x;
         double gps_position$position_y;
-        long gps_position$robot_id;
-        long gps_position$start;
-        long gps_positionsoil_humidity$end;
-        long gps_positionsoil_humidity$start;
-        long soil_humidity$end;
-        double soil_humidity$humidity;
-        long soil_humidity$joinKey;
+        long soil_humidity$sensor_id;
         double soil_humidity$position_x;
         double soil_humidity$position_y;
-        long soil_humidity$sensor_id;
-        long soil_humidity$start;
+        double soil_humidity$humidity;
     }
 
     static class JoinOutput {
@@ -148,6 +142,9 @@ public class HumidityQuery {
             Query finalQuery = q1.joinWith(q2)
                 .where(attribute("joinKey").equalTo(attribute("joinKey")))
                 .window(TumblingWindow.of(eventTime("start"), seconds(1)))
+                .project(attribute("gps_position$start"), attribute("gps_position$end"), attribute("gps_position$robot_id"),
+                        attribute("gps_position$position_x"), attribute("gps_position$position_y"), attribute("soil_humidity$sensor_id"),
+                        attribute("soil_humidity$position_x"), attribute("soil_humidity$position_y"), attribute("soil_humidity$humidity"))
                 .map(new CalculateDistance())
                 .filter(attribute("distance").lessThanOrEqual(bufferRadius))
                 .filter(attribute("humidity").greaterThan(humThreshold));
