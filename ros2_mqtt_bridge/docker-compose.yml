@@ -9,7 +9,7 @@ services:
   ros2_play:
     build:
       context: .
-      dockerfile: config/Dockerfile
+      dockerfile: config/Dockerfile.bridge
     network_mode: host
     volumes:
       - ../ros2_bags:/bags

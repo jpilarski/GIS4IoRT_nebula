@@ -56,6 +56,6 @@
     * Update `FIELD_FILE`, `GEOFENCE_QUERY`, `HUMIDITY_QUERY` and `QUERY_NAMES` (2 previous connected with a `;`)
     * Run `docker compose pull` and `docker compose build`
     * Run services: `docker compose up mosquitto -d`, `docker compose up nes_ui -d`
-    * Run queries: `docker compose up geofence_query -d` and `docker compose up historical_query -d`
+    * Run queries: `docker compose up geofence_query -d` and `docker compose up humidity_query -d`
     * Open the NES UI (current Machine IP, port `9000`) and enter `NES_COORDINATOR_IP:8081`
     * Run subscriber by running `docker compose up subscriber`

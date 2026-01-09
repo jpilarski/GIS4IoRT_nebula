@@ -1,6 +1,5 @@
 package org.chistera;
 
-import org.locationtech.jts.io.ParseException;
 import stream.nebula.operators.sinks.MQTTSink;
 import stream.nebula.operators.window.TumblingWindow;
 import stream.nebula.runtime.NebulaStreamRuntime;
@@ -13,50 +12,44 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static stream.nebula.expression.Expressions.attribute;
+import static stream.nebula.expression.Expressions.literal;
+import static stream.nebula.operators.Aggregation.average;
 import static stream.nebula.operators.Aggregation.sum;
 import static stream.nebula.operators.window.Duration.seconds;
 import static stream.nebula.operators.window.EventTime.eventTime;
 
 public class HumidityQuery {
 
-    // static class GPS_PositionInput {
-    //     long timestamp;
-    //     String robot_name;
-    //     double position_x;
-    //     double position_y;
-    // }
+    static class GPS_PositionInput {
+        long timestamp;
+        String robot_name;
+        double position_x;
+        double position_y;
+    }
 
-    // static class GPS_PositionOutput {
-    //     long timestamp;
-    //     int robot_id;
-    //     double position_x;
-    //     double position_y;
-    //     int exited;
-    // }
+    static class GPS_PositionOutput {
+        long timestamp;
+        int robot_id;
+        double position_x;
+        double position_y;
+    }
 
-    // static class GeoFence implements MapFunction<GPS_PositionInput, GPS_PositionOutput> {
-    //     private final Path2D.Double field;
+    static class GeoFence implements MapFunction<GPS_PositionInput, GPS_PositionOutput> {
 
-    //     public GeoFence(Path2D.Double field) {
-    //         this.field = field;
-    //     }
-
-    //     @Override
-    //     public GPS_PositionOutput map(final GPS_PositionInput input) {
-    //         GPS_PositionOutput output = new GPS_PositionOutput();
-    //         output.timestamp = input.timestamp;
-    //         if (input.robot_name.equals("leader")) {
-    //             output.robot_id = 0;
-    //         } else {
-    //             output.robot_id = 1;
-    //         }
-    //         output.position_x = input.position_x;
-    //         output.position_y = input.position_y;
-            
-    //         output.exited = this.field.contains(input.position_x, input.position_y) ? 0 : 1;
-    //         return output;
-    //     }
-    // }
+        @Override
+        public GPS_PositionOutput map(final GPS_PositionInput input) {
+            GPS_PositionOutput output = new GPS_PositionOutput();
+            output.timestamp = input.timestamp;
+            if (input.robot_name.equals("leader")) {
+                output.robot_id = 0;
+            } else {
+                output.robot_id = 1;
+            }
+            output.position_x = input.position_x;
+            output.position_y = input.position_y;
+            return output;
+        }
+    }
 
     public static void main(String[] args) {
         try {
@@ -80,10 +73,15 @@ public class HumidityQuery {
 
             NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
             Query query = nebulaStreamRuntime.readFromSource("gps_position")
-                .map("joinKey", literal(1))
-                .joinWith(nebulaStreamRuntime.readFromSource("soil_humidity")
-                        .map("joinKey", literal(1)))
-                .where(attribute("joinKey").equalTo(attribute("joinKey")));
+                .map(new GeoFence())
+                .window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
+                .byKey("robot_id")
+                .apply(average("position_x"), average("position_y"))
+                .map("joinKey", literal(1));
+                // .joinWith(nebulaStreamRuntime.readFromSource("soil_humidity")
+                //         .map("joinKey", literal(1)))
+                // .where(attribute("joinKey").equalTo(attribute("joinKey")))
+                // .window(TumblingWindow.of(eventTime("timestamp"), seconds(5)));
             
             // query.map(new GeoFence(fieldShape));
             
@@ -101,9 +99,6 @@ public class HumidityQuery {
             System.out.println("Query started with ID: " + queryId);
 
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        } catch (ParseException e) {
             e.printStackTrace();
             System.exit(1);
         } catch (Throwable t) {
