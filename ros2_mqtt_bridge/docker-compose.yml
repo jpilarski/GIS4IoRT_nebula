@@ -19,7 +19,7 @@ services:
   ros2_mqtt:
     build:
       context: .
-      dockerfile: config/Dockerfile
+      dockerfile: config/Dockerfile.bridge
     network_mode: host
     volumes:
       - ./scripts:/scripts

@@ -11,7 +11,6 @@ class Ros2MqttBridge(Node):
         self.robot_name = robot_name
         self.ros2_topic = ros2_topic
         self.mqtt_topic = mqtt_topic
-
         self.create_subscription(
             NavSatFix, 
             self.ros2_topic,
@@ -39,18 +38,15 @@ def main():
         return
 
     m_ip, m_port, r_name, r_topic, m_topic = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5]
-
     client = mqtt.Client(
         client_id=f"{r_name}_mqtt_bridge",
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
         transport="websockets",
         protocol=mqtt.MQTTv5
     )
-
     try:
         client.connect(m_ip, m_port, 60)
         client.loop_start()
-
         rclpy.init()
         node = Ros2MqttBridge(client, r_name, r_topic, m_topic)
         rclpy.spin(node)

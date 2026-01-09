@@ -30,7 +30,7 @@
         * Update `url` if `MQTT_IP` was changed in Step 3
     * Run `docker compose pull` and `docker compose up`
 
-5. **Repeat steps 3–4** for each additional robot/worker on a new machine
+5. **Repeat steps 3–4** for each additional robot on a new machine
 
 6. **On another Machine (Humidity Producer):**
     Navigate to the `/humidity_producer` directory:
