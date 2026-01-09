@@ -1,7 +1,7 @@
 coordinatorHost: 192.168.0.188
 coordinatorPort: 4000
-localWorkerHost: 192.168.0.149
-# localWorkerHost: 192.168.0.101
+localWorkerHost: 192.168.0.151
+# localWorkerHost: 192.168.0.163
 workerId: 2
 # workerId: 3
 logLevel: LOG_WARNING

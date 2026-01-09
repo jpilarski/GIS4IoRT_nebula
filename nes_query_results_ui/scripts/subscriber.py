@@ -13,7 +13,7 @@ def on_connect(client, userdata, flags, reasonCode, properties):
 def on_message(client, userdata, msg):
     try:
         data = json.loads(msg.payload.decode())
-        output_parts = [f'{key.split("$")[-1]}: {value}' for key, value in data.items()]
+        output_parts = [f'{key}: {value}' for key, value in data.items()]
         output_string = f"[{msg.topic}] " + ", ".join(output_parts)
         print(output_string, flush=True)
     except Exception as e:
