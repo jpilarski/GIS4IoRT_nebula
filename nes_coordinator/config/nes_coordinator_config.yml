@@ -9,6 +9,7 @@ logicalSources:
         type: FLOAT64
       - name: position_y
         type: FLOAT64
+
   - logicalSourceName: soil_humidity
     fields:
       - name: timestamp
