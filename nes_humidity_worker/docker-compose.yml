@@ -7,4 +7,4 @@ services:
       - ./config:/config
     command:
       - nesWorker
-      - --configPath=/config/nes_worker_config.yml
+      - --configPath=/config/nes_humidity_worker_config.yml

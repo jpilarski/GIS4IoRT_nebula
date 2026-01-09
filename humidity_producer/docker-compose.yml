@@ -1,0 +1,18 @@
+services:
+
+  mosquitto:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config:/mosquitto/config
+
+  humidity_producer:
+    build:
+      context: .
+      dockerfile: config/Dockerfile
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+      - ./data:/data
+    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT}", "/data/field/${FIELD_FILE}", "${NUM_SENSORS}", "${FREQUENCY_HZ}" ]
+    env_file: .env

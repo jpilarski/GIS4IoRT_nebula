@@ -1,0 +1,17 @@
+coordinatorHost: 192.168.0.188
+coordinatorPort: 4000
+localWorkerHost: 192.168.0.151
+# localWorkerHost: 192.168.0.163
+workerId: 2
+# workerId: 3
+logLevel: LOG_WARNING
+
+physicalSources:
+  - logicalSourceName: gps_position
+    physicalSourceName: leader
+    # physicalSourceName: follower
+    type: MQTT_SOURCE
+    configuration:
+      url: ws://127.0.0.1:9001
+      topic: leader_gps_fix
+      # topic: follower_gps_fix
