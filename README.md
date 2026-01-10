@@ -53,7 +53,7 @@
     Navigate to the `/nes_query_results_ui` directory:
     * Set `NES_COORDINATOR_IP` in the `.env` file to match the IP from Step 2
     * Set `QUERY_HOST_IP` to the IP address of this Machine
-    * Update `FIELD_FILE`, `GEOFENCE_QUERY`, `HUMIDITY_QUERY` and `QUERY_NAMES` (2 previous connected with a `;`)
+    * Update `GEOFENCE_QUERY`, `FIELD_FILE`, `HUMIDITY_QUERY`, `HUMIDITY_THRESHOLD`, `BUFFER_RADIUS` and `QUERY_NAMES`
     * Run `docker compose pull` and `docker compose build`
     * Run services: `docker compose up mosquitto -d`, `docker compose up nes_ui -d`
     * Run queries: `docker compose up geofence_query -d` and `docker compose up humidity_query -d`
