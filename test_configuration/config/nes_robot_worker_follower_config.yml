@@ -1,0 +1,13 @@
+coordinatorHost: 127.0.0.1 # IP_KOMPUTERA
+coordinatorPort: 4000
+localWorkerHost: 127.0.0.1 # IP_KOMPUTERA
+workerId: 3
+logLevel: LOG_WARNING
+
+physicalSources:
+  - logicalSourceName: gps_position
+    physicalSourceName: follower
+    type: MQTT_SOURCE
+    configuration:
+      url: ws://127.0.0.1:9002 # IP_KOMPUTERA:9002
+      topic: follower_gps_fix

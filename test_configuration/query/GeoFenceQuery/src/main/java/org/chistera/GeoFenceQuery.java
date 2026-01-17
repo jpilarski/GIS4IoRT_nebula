@@ -70,7 +70,7 @@ public class GeoFenceQuery {
             String nesIp = System.getenv("NES_COORDINATOR_IP");
             String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
             String mqttIp = System.getenv("QUERY_HOST_IP");
-            String mqttPortStr = System.getenv("QUERY_HOST_MQTT_PORT");
+            String mqttPortStr = System.getenv("MQTT_PORT_RESULTS");
 
             int nesPort = Integer.parseInt(nesPortStr);
             String mqttUrl = "ws://" + mqttIp + ":" + mqttPortStr;
@@ -80,13 +80,9 @@ public class GeoFenceQuery {
             NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
             Query query = nebulaStreamRuntime.readFromSource("gps_position");
             
-            //query.map(new GeoFence(fieldShape));
+            query.map(new GeoFence(fieldShape));
             
-            query.window(TumblingWindow.of(eventTime("timestamp"), seconds(1)))
-                 .byKey("position_x")
-                 .apply(count());
-            
-            //query.filter(attribute("exited").greaterThan(0));
+            query.filter(attribute("exited").greaterThan(0));
             
             query.sink(new MQTTSink(mqttUrl, queryName, "user", 1000, 
                         MQTTSink.TimeUnits.milliseconds, 0, 
