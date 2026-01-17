@@ -14,5 +14,5 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./data:/data
-    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT}", "/data/field/${FIELD_FILE}", "${NUM_SENSORS}", "${FREQUENCY_HZ}" ]
+    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT}", "/data/sensors.csv" ]
     env_file: .env

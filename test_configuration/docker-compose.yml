@@ -123,6 +123,32 @@ services:
       - nesWorker
       - --configPath=/config/nebulastream/nes_robot_worker_leader_inv_config.yml
 
+  mosquitto_humidity:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config/mosquitto/humidity:/mosquitto/config
+
+  humidity_producer:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.humproducer
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+      - ./data:/data
+    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT_HUMIDITY}", "/data/sensors.csv" ]
+    env_file: .env
+
+  nes_worker_humidity:
+    image: nebulastream/nes-executable-image:latest
+    network_mode: host
+    volumes:
+      - ./config:/config
+    command:
+      - nesWorker
+      - --configPath=/config/nebulastream/nes_humidity_worker_config.yml
+
   mosquitto_results:
     image: eclipse-mosquitto
     network_mode: host

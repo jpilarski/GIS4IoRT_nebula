@@ -1,6 +1,6 @@
-coordinatorHost: 0.0.0.0 # IP_KOMPUTERA
+coordinatorHost: 192.168.0.188 # IP_KOMPUTERA
 coordinatorPort: 4000
-localWorkerHost: 0.0.0.0 # IP_KOMPUTERA
+localWorkerHost: 192.168.0.188 # IP_KOMPUTERA
 workerId: 3
 logLevel: LOG_WARNING
 
@@ -9,5 +9,5 @@ physicalSources:
     physicalSourceName: follower
     type: MQTT_SOURCE
     configuration:
-      url: ws://0.0.0.0:9002 # IP_KOMPUTERA:9002
+      url: ws://192.168.0.188:9002 # IP_KOMPUTERA:9002
       topic: follower_gps_fix

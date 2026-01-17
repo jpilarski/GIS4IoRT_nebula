@@ -36,7 +36,6 @@
 6. **On another Machine (Humidity Producer):**
     Navigate to the `/humidity_producer` directory:
     * _Optional: Set `MQTT_IP` in the `.env` file to the IP address of this Machine, or leave it as `127.0.0.1`_
-    * Configure `FIELD_FILE`, `NUM_SENSORS`, and `FREQUENCY_HZ` in the `.env` file
     * Run `docker compose pull` and `docker compose build`
     * Run services: `docker compose up mosquitto -d` and `docker compose up humidity_producer`
 
@@ -53,9 +52,9 @@
     Navigate to the `/nes_query_results_ui` directory:
     * Set `NES_COORDINATOR_IP` in the `.env` file to match the IP from Step 2
     * Set `QUERY_HOST_IP` to the IP address of this Machine
-    * Update `GEOFENCE_QUERY`, `FIELD_FILE`, `HUMIDITY_QUERY`, `HUMIDITY_THRESHOLD`, `BUFFER_RADIUS` and `QUERY_NAMES`
+    * Update `GEOFENCE_QUERY`, `FIELD_FILE`, `HUMIDITY_QUERY`, `HUMIDITY_THRESHOLD`, `BUFFER_RADIUS`, `COLLISION_QUERY`, `COLLISION_RADIUS` and `QUERY_NAMES`
     * Run `docker compose pull` and `docker compose build`
     * Run services: `docker compose up mosquitto -d`, `docker compose up nes_ui -d`
-    * Run queries: `docker compose up geofence_query -d` and `docker compose up humidity_query -d`
+    * Run queries: `docker compose up geofence_query -d`, `docker compose up humidity_query -d` and `docker compose up collision_query -d`
     * Open the NES UI (current Machine IP, port `9000`) and enter `NES_COORDINATOR_IP:8081`
     * Run subscriber by running `docker compose up subscriber`

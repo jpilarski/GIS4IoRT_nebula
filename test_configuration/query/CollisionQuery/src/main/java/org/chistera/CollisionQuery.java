@@ -221,12 +221,12 @@ public class CollisionQuery {
             NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
             Query q1 = nebulaStreamRuntime.readFromSource("gps_position");
             q1.map(new Name2IdR1());
-            q1.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("robot_id").apply(average("position_x"), average("position_y"));
+            q1.window(TumblingWindow.of(eventTime("timestampR1"), seconds(1))).byKey("robot_idR1").apply(average("position_xR1"), average("position_yR1"));
             q1.map("joinKey", literal(1));
 
             Query q2 = nebulaStreamRuntime.readFromSource("gps_position");
             q2.map(new Name2IdR2());
-            q2.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("robot_id").apply(average("position_x"), average("position_y"));
+            q2.window(TumblingWindow.of(eventTime("timestampR2"), seconds(1))).byKey("robot_idR2").apply(average("position_xR2"), average("position_yR2"));
             q2.map("joinKey", literal(1));
 
             Query finalQuery = q1.joinWith(q2).where(attribute("joinKey").equalTo(attribute("joinKey"))).window(TumblingWindow.of(eventTime("start"), seconds(1)));
