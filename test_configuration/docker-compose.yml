@@ -17,3 +17,81 @@ services:
       - --logLevel=LOG_WARNING
       - --configPath=/config/nes_coordinator_config.yml
     env_file: .env
+
+  mosquitto_leader:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config/mosquitto/leader:/mosquitto/config
+
+  ros2_mqtt_leader:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_LEADER}", "${ROBOT_NAME_LEADER}", "${ROS2_TOPIC_LEADER}", "${MQTT_TOPIC_LEADER}" ]
+    env_file: .env
+
+  ros2_play_leader:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ../ros2_bags:/bags
+    command: [ "ros2", "bag", "play", "/bags/${ROBOT_NAME_LEADER}" ]
+    env_file: .env
+
+  mosquitto_follower:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config/mosquitto/follower:/mosquitto/config
+
+  ros2_mqtt_follower:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_FOLLOWER}", "${ROBOT_NAME_FOLLOWER}", "${ROS2_TOPIC_FOLLOWER}", "${MQTT_TOPIC_FOLLOWER}" ]
+    env_file: .env
+
+  ros2_play_follower:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ../ros2_bags:/bags
+    command: [ "ros2", "bag", "play", "/bags/${ROBOT_NAME_FOLLOWER}" ]
+    env_file: .env
+
+  mosquitto_leader_inv:
+    image: eclipse-mosquitto
+    network_mode: host
+    volumes:
+      - ./config/mosquitto/leader_inv:/mosquitto/config
+
+  ros2_mqtt_leader_inv:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_LEADER_INV}", "${ROBOT_NAME_LEADER_INV}", "${ROS2_TOPIC_LEADER_INV}", "${MQTT_TOPIC_LEADER_INV}" ]
+    env_file: .env
+
+  ros2_play_leader_inv:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.bridge
+    network_mode: host
+    volumes:
+      - ../ros2_bags:/bags
+    command: [ "ros2", "bag", "play", "/bags/${ROBOT_NAME_LEADER_INV}" ]
+    env_file: .env
