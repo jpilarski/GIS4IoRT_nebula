@@ -15,7 +15,7 @@ services:
       - --worker.coordinatorPort=${NES_COORDINATOR_RPC_PORT}
       - --worker.localWorkerHost=${NES_COORDINATOR_IP}
       - --logLevel=LOG_WARNING
-      - --configPath=/config/nes_coordinator_config.yml
+      - --configPath=/config/nebulastream/nes_coordinator_config.yml
     env_file: .env
 
   mosquitto_leader:
@@ -95,3 +95,30 @@ services:
       - ../ros2_bags:/bags
     command: [ "ros2", "bag", "play", "/bags/${ROBOT_NAME_LEADER_INV}" ]
     env_file: .env
+
+  nes_worker_leader:
+    image: nebulastream/nes-executable-image:latest
+    network_mode: host
+    volumes:
+      - ./config:/config
+    command:
+      - nesWorker
+      - --configPath=/config/nebulastream/nes_robot_worker_leader_config.yml
+
+  nes_worker_follower:
+    image: nebulastream/nes-executable-image:latest
+    network_mode: host
+    volumes:
+      - ./config:/config
+    command:
+      - nesWorker
+      - --configPath=/config/nebulastream/nes_robot_worker_follower_config.yml
+
+  nes_worker_leader_inv:
+    image: nebulastream/nes-executable-image:latest
+    network_mode: host
+    volumes:
+      - ./config:/config
+    command:
+      - nesWorker
+      - --configPath=/config/nebulastream/nes_robot_worker_leader_inv_config.yml
