@@ -155,10 +155,6 @@ services:
     volumes:
       - ./config/mosquitto/results:/mosquitto/config
 
-  nes_ui:
-    image: nebulastream/nes-ui-image:latest
-    network_mode: host
-
   subscriber:
     build:
       context: .

@@ -1,7 +1,7 @@
 coordinatorHost: 127.0.0.1 # IP_KOMPUTERA
 coordinatorPort: 4000
 localWorkerHost: 127.0.0.1 # IP_KOMPUTERA
-workerId: 4
+workerId: 2
 logLevel: LOG_WARNING
 
 physicalSources:
