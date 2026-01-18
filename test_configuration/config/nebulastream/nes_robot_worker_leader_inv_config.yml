@@ -1,6 +1,6 @@
-coordinatorHost: 192.168.0.188 # IP_KOMPUTERA
+coordinatorHost: 127.0.0.1 # IP_KOMPUTERA
 coordinatorPort: 4000
-localWorkerHost: 192.168.0.188 # IP_KOMPUTERA
+localWorkerHost: 127.0.0.1 # IP_KOMPUTERA
 workerId: 4
 logLevel: LOG_WARNING
 
@@ -9,5 +9,5 @@ physicalSources:
     physicalSourceName: leader_inv
     type: MQTT_SOURCE
     configuration:
-      url: ws://192.168.0.188:9003 # IP_KOMPUTERA:9003
+      url: ws://127.0.0.1:9003 # IP_KOMPUTERA:9003
       topic: leader_inv_gps_fix

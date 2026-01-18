@@ -5,6 +5,7 @@ KONFIGURACJA
 git clone https://github.com/jpilarski/GIS4IoRT_nebula
 cd GIS4IoRT_nebula/test_configuration
 
+# W WSL musi być 127.0.0.1 (jest już ustawione)
 # Ustaw zmienną IP_KOMPUTERA w .env
 # Ustaw też tą samą wartość w plikach:
 	# config/nebulastream/nes_robot_worker_leader_config.yml
@@ -39,9 +40,10 @@ docker compose up nes_worker_follower -d
 sleep 3
 docker compose up mosquitto_results -d
 sleep 3
-docker compose up nes_ui -d
-sleep 3
 
+# UI nie zadziała na WSL
+# docker compose up nes_ui -d
+# sleep 3
 # Wejdź na IP_KOMPUTERA:9000 i w ustawieniach wpisz IP_KOMPUTERA i port 8081
 
 docker compose up geofence_query -d
@@ -81,9 +83,10 @@ docker compose up nes_worker_humidity -d
 sleep 3
 docker compose up mosquitto_results -d
 sleep 3
-docker compose up nes_ui -d
-sleep 3
 
+# UI nie zadziała na WSL
+# docker compose up nes_ui -d
+# sleep 3
 # Wejdź na IP_KOMPUTERA:9000 i w ustawieniach wpisz IP_KOMPUTERA i port 8081
 
 docker compose up humidity_query -d
@@ -120,9 +123,10 @@ docker compose up nes_worker_follower -d
 sleep 3
 docker compose up mosquitto_results -d
 sleep 3
-docker compose up nes_ui -d
-sleep 3
 
+# UI nie zadziała na WSL
+# docker compose up nes_ui -d
+# sleep 3
 # Wejdź na IP_KOMPUTERA:9000 i w ustawieniach wpisz IP_KOMPUTERA i port 8081
 
 docker compose up collision_query -d
