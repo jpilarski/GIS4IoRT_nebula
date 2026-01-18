@@ -1,0 +1,30 @@
+docker compose up nes_coordinator -d
+sleep 3
+docker compose up nes_ui -d
+sleep 3
+docker compose up mosquitto_leader_inv -d
+sleep 3
+docker compose up mosquitto_follower -d
+sleep 3
+docker compose up ros2_mqtt_leader_inv -d
+sleep 3
+docker compose up ros2_mqtt_follower -d
+sleep 3
+docker compose up nes_worker_leader_inv -d
+sleep 3
+docker compose up nes_worker_follower -d
+sleep 3
+docker compose up mosquitto_results -d
+sleep 3
+docker compose up collision_query -d
+sleep 10
+docker compose up collision_query -d
+sleep 3
+docker compose up subscriber -d
+sleep 3
+docker compose up ros2_play_leader_inv -d
+docker compose up ros2_play_follower
+
+# Po zakończeniu przetwarzania
+docker compose down
+# Logi będą w logs/

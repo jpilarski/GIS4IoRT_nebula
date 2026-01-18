@@ -1,0 +1,12 @@
+# Wejdź na IP_WSL:9000, tam będzie NES_UI, powinno połączyć się automatycznie
+# W zakładce querycatalog jest lista zapytań które się wykonują
+# W zakładce topology jest graf sieci
+# Dla geofence stanem oczekiwanym jest jedno zielone zapytanie running i sieć z koordynatora i 2 workerów
+# Dla humidity stanem oczekiwanym jest jedno zielone zapytanie running i sieć z koordynatora i 3 workerów
+# Dla collision stanem oczekiwanym jest jedno niebieskie zapytanie optimizing, zielone zapytanie running i sieć z koordynatora i 2 workerów
+# Zalecane jest odświeżanie strony co 2-3 minuty w celu sprawdzenia czy na pewno wszystko działa (zwłaszcza przy collision) (bardziej intuicyjne niż logi dockera w konsoli)
+
+# Budowanie obrazów
+
+docker compose pull
+docker compose build
