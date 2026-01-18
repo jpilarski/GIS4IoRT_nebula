@@ -3,6 +3,9 @@ FROM gradle:8.5-jdk17 AS builder
 WORKDIR /home/gradle/project
 
 COPY query/CollisionQuery/settings.gradle.kts query/CollisionQuery/build.gradle.kts ./
+
+RUN gradle dependencies --no-daemon || return 0
+
 COPY query/CollisionQuery/src ./src
 
 RUN gradle clean shadowJar --no-daemon

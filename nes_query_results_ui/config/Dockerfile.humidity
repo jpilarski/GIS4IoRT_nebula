@@ -3,6 +3,9 @@ FROM gradle:8.5-jdk17 AS builder
 WORKDIR /home/gradle/project
 
 COPY query/HumidityQuery/settings.gradle.kts query/HumidityQuery/build.gradle.kts ./
+
+RUN gradle dependencies --no-daemon || return 0
+
 COPY query/HumidityQuery/src ./src
 
 RUN gradle clean shadowJar --no-daemon
