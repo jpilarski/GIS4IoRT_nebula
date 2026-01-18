@@ -28,7 +28,7 @@ public class GeoFenceQuery {
 
     static class Name2IdOutput {
         long timestamp;
-        int robot_id;
+        long robot_id;
         double position_x;
         double position_y;
     }
@@ -40,16 +40,16 @@ public class GeoFenceQuery {
             output.timestamp = input.timestamp;
             switch (input.robot_name) {
                 case "leader":
-                    output.robot_id = 0;
+                    output.robot_id = 0L;
                     break;
                 case "follower":
-                    output.robot_id = 1;
+                    output.robot_id = 1L;
                     break;
                 case "leader_inv":
-                    output.robot_id = 2;
+                    output.robot_id = 2L;
                     break;
                 default:
-                    output.robot_id = 10;
+                    output.robot_id = 10L;
                     break;
             }
             output.position_x = input.position_x;
@@ -60,7 +60,7 @@ public class GeoFenceQuery {
 
     static class Id2NameInput {
         long timestamp;
-        int robot_id;
+        long robot_id;
         double position_x;
         double position_y;
         boolean exited;
@@ -79,19 +79,14 @@ public class GeoFenceQuery {
         public Id2NameOutput map(final Id2NameInput input) {
             Id2NameOutput output = new Id2NameOutput();
             output.timestamp = input.timestamp;
-            switch (input.robot_id) {
-                case 0:
-                    output.robot_name = "leader";
-                    break;
-                case 1:
-                    output.robot_name = "follower";
-                    break;
-                case 2:
-                    output.robot_name = "leader_inv";
-                    break;
-                default:
-                    output.robot_name = "default";
-                    break;
+            if (input.robot_id == 0L) {
+                output.robot_name = "leader";
+            } else if (input.robot_id == 1L) {
+                output.robot_name = "follower";
+            } else if (input.robot_id == 2L) {
+                output.robot_name = "leader_inv";
+            } else {
+                output.robot_name = "default";
             }
             output.position_x = input.position_x;
             output.position_y = input.position_y;
@@ -102,14 +97,14 @@ public class GeoFenceQuery {
 
     static class GeoFenceInput {
         long timestamp;
-        int robot_id;
+        long robot_id;
         double position_x;
         double position_y;
     }
 
     static class GeoFenceOutput {
         long timestamp;
-        int robot_id;
+        long robot_id;
         double position_x;
         double position_y;
         boolean exited;

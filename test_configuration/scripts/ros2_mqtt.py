@@ -3,14 +3,16 @@ from rclpy.node import Node
 from sensor_msgs.msg import NavSatFix
 import paho.mqtt.client as mqtt
 import sys, json, time
+from data_logger import BufferedLogger
 
 class Ros2MqttBridge(Node):
-    def __init__(self, mqtt_client, robot_name, ros2_topic, mqtt_topic):
+    def __init__(self, mqtt_client, robot_name, ros2_topic, mqtt_topic, logger):
         super().__init__('ros2_mqtt_bridge')
         self.mqtt_client = mqtt_client
         self.robot_name = robot_name
         self.ros2_topic = ros2_topic
         self.mqtt_topic = mqtt_topic
+        self.logger = logger
         self.create_subscription(
             NavSatFix, 
             self.ros2_topic,
@@ -20,13 +22,14 @@ class Ros2MqttBridge(Node):
 
     def callback(self, msg):
         payload = {
-            # total_nsec = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
-            # timestamp = total_nsec // 1_000_000 
             "timestamp": int(time.time() * 1000),
             "robot_name": self.robot_name,
             "position_x": msg.longitude,
             "position_y": msg.latitude
         }
+        
+        self.logger.log(payload)
+
         try:
             self.mqtt_client.publish(self.mqtt_topic, json.dumps(payload))
         except Exception as e:
@@ -38,22 +41,37 @@ def main():
         return
 
     m_ip, m_port, r_name, r_topic, m_topic = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5]
+    
+    start_ts = int(time.time() * 1000)
+    log_file = f"/logs/{r_name}_{start_ts}.csv"
+    fields = ["timestamp", "robot_name", "position_x", "position_y"]
+    
+    csv_logger = BufferedLogger(log_file, fields, buffer_size=100, flush_interval=10)
+
     client = mqtt.Client(
         client_id=f"{r_name}_mqtt_bridge",
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
         transport="websockets",
         protocol=mqtt.MQTTv5
     )
+    
+    node = None
     try:
         client.connect(m_ip, m_port, 60)
         client.loop_start()
         rclpy.init()
-        node = Ros2MqttBridge(client, r_name, r_topic, m_topic)
+        node = Ros2MqttBridge(client, r_name, r_topic, m_topic, csv_logger)
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
+    except Exception as e:
+        print(f"Critical Error: {e}")
     finally:
-        node.destroy_node()
+        print("Shutting down bridge...", flush=True)
+        csv_logger.close()
+        
+        if node:
+            node.destroy_node()
         rclpy.shutdown()
         client.loop_stop()
         client.disconnect()

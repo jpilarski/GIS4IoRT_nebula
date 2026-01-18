@@ -4,6 +4,7 @@ import json
 import random
 import csv
 import paho.mqtt.client as mqtt
+from data_logger import BufferedLogger
 
 class Sensor:
     def __init__(self, sensor_id, lon, lat, mode):
@@ -46,12 +47,7 @@ def load_sensors(file_path):
         with open(file_path, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                s = Sensor(
-                    row['id'],
-                    row['lon'],
-                    row['lat'],
-                    row['mode']
-                )
+                s = Sensor(row['id'], row['lon'], row['lat'], row['mode'])
                 sensors.append(s)
         return sensors
     except Exception as e:
@@ -67,6 +63,14 @@ def main():
     sensors_file = sys.argv[3]
     mqtt_topic = "humidity_producer"
     sensors = load_sensors(sensors_file)
+
+    start_ts = int(time.time() * 1000)
+    log_file = f"/logs/humidity_{start_ts}.csv"
+    fields = ["timestamp", "sensor_id", "position_x", "position_y", "humidity"]
+    
+    csv_logger = BufferedLogger(log_file, fields, buffer_size=60, flush_interval=10)
+    # ==============================
+
     client = mqtt.Client(
         client_id="humidity_producer",
         transport="websockets",
@@ -81,6 +85,9 @@ def main():
             for sensor in sensors:
                 if sensor.should_emit(now):
                     payload = sensor.get_payload(now)
+                    
+                    csv_logger.log(payload)
+
                     try:
                         client.publish(mqtt_topic, json.dumps(payload))
                     except Exception as e:
@@ -92,6 +99,7 @@ def main():
     except Exception as e:
         print(f"Error {e}")
     finally:
+        csv_logger.close()
         client.loop_stop()
         client.disconnect()
 

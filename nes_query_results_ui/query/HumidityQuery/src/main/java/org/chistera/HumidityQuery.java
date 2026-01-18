@@ -10,8 +10,7 @@ import java.io.IOException;
 
 import static stream.nebula.expression.Expressions.attribute;
 import static stream.nebula.expression.Expressions.literal;
-import static stream.nebula.operators.Aggregation.average;
-import static stream.nebula.operators.Aggregation.max;
+import static stream.nebula.operators.Aggregation.*;
 import static stream.nebula.operators.window.Duration.seconds;
 import static stream.nebula.operators.window.EventTime.eventTime;
 
@@ -26,7 +25,7 @@ public class HumidityQuery {
 
     static class Name2IdOutput {
         long timestamp;
-        int robot_id;
+        long robot_id;
         double position_x;
         double position_y;
     }
@@ -38,16 +37,16 @@ public class HumidityQuery {
             output.timestamp = input.timestamp;
             switch (input.robot_name) {
                 case "leader":
-                    output.robot_id = 0;
+                    output.robot_id = 0L;
                     break;
                 case "follower":
-                    output.robot_id = 1;
+                    output.robot_id = 1L;
                     break;
                 case "leader_inv":
-                    output.robot_id = 2;
+                    output.robot_id = 2L;
                     break;
                 default:
-                    output.robot_id = 10;
+                    output.robot_id = 10L;
                     break;
             }
             output.position_x = input.position_x;
@@ -59,9 +58,11 @@ public class HumidityQuery {
     static class Id2NameInput {
         long start;
         long end;
-        int robot_id;
+        long robot_count;
+        long robot_id;
         double robot_position_x;
         double robot_position_y;
+        long sensor_count;
         long sensor_id;
         double sensor_position_x;
         double sensor_position_y;
@@ -72,9 +73,11 @@ public class HumidityQuery {
     static class Id2NameOutput {
         long start;
         long end;
+        long robot_count;
         String robot_name;
         double robot_position_x;
         double robot_position_y;
+        long sensor_count;
         long sensor_id;
         double sensor_position_x;
         double sensor_position_y;
@@ -88,22 +91,19 @@ public class HumidityQuery {
             Id2NameOutput output = new Id2NameOutput();
             output.start = input.start;
             output.end = input.end;
-            switch (input.robot_id) {
-                case 0:
-                    output.robot_name = "leader";
-                    break;
-                case 1:
-                    output.robot_name = "follower";
-                    break;
-                case 2:
-                    output.robot_name = "leader_inv";
-                    break;
-                default:
-                    output.robot_name = "default";
-                    break;
+            output.robot_count = input.robot_count;
+            if (input.robot_id == 0L) {
+                output.robot_name = "leader";
+            } else if (input.robot_id == 1L) {
+                output.robot_name = "follower";
+            } else if (input.robot_id == 2L) {
+                output.robot_name = "leader_inv";
+            } else {
+                output.robot_name = "default";
             }
             output.robot_position_x = input.robot_position_x;
             output.robot_position_y = input.robot_position_y;
+            output.sensor_count = input.sensor_count;
             output.sensor_id = input.sensor_id;
             output.sensor_position_x = input.sensor_position_x;
             output.sensor_position_y = input.sensor_position_y;
@@ -116,9 +116,11 @@ public class HumidityQuery {
     static class JoinInput {
         long gps_position$start;
         long gps_position$end;
-        int gps_position$robot_id;
+        long gps_position$count;
+        long gps_position$robot_id;
         double gps_position$position_x;
         double gps_position$position_y;
+        long soil_humidity$count;
         long soil_humidity$sensor_id;
         double soil_humidity$position_x;
         double soil_humidity$position_y;
@@ -128,9 +130,11 @@ public class HumidityQuery {
     static class JoinOutput {
         long start;
         long end;
-        int robot_id;
+        long robot_count;
+        long robot_id;
         double robot_position_x;
         double robot_position_y;
+        long sensor_count;
         long sensor_id;
         double sensor_position_x;
         double sensor_position_y;
@@ -154,9 +158,11 @@ public class HumidityQuery {
             JoinOutput output = new JoinOutput();
             output.start = input.gps_position$start;
             output.end = input.gps_position$end;
+            output.robot_count = input.gps_position$count;
             output.robot_id = input.gps_position$robot_id;
             output.robot_position_x = input.gps_position$position_x;
             output.robot_position_y = input.gps_position$position_y;
+            output.sensor_count = input.soil_humidity$count;
             output.sensor_id = input.soil_humidity$sensor_id;
             output.sensor_position_x = input.soil_humidity$position_x;
             output.sensor_position_y = input.soil_humidity$position_y;
@@ -168,7 +174,6 @@ public class HumidityQuery {
 
     public static void main(String[] args) {
         try {
-
             String nesIp = System.getenv("NES_COORDINATOR_IP");
             String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
             String mqttIp = System.getenv("QUERY_HOST_IP");
@@ -185,13 +190,13 @@ public class HumidityQuery {
             NebulaStreamRuntime nebulaStreamRuntime = NebulaStreamRuntime.getRuntime(nesIp, nesPort);
             Query q1 = nebulaStreamRuntime.readFromSource("gps_position");
             q1.map(new Name2Id());
-            q1.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("robot_id").apply(average("position_x"), average("position_y"));
+            q1.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("robot_id").apply(count(), average("position_x"), average("position_y"));
             q1.map("joinKey", literal(1));
             Query q2 = nebulaStreamRuntime.readFromSource("soil_humidity");
-            q2.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("sensor_id").apply(average("position_x"), average("position_y"), max("humidity"));
+            q2.window(TumblingWindow.of(eventTime("timestamp"), seconds(1))).byKey("sensor_id").apply(count(), average("position_x"), average("position_y"), max("humidity"));
             q2.map("joinKey", literal(1));
             Query finalQuery = q1.joinWith(q2).where(attribute("joinKey").equalTo(attribute("joinKey"))).window(TumblingWindow.of(eventTime("start"), seconds(1)));
-            finalQuery.project(attribute("gps_position$start"), attribute("gps_position$end"), attribute("gps_position$robot_id"), attribute("gps_position$position_x"), attribute("gps_position$position_y"), attribute("soil_humidity$sensor_id"), attribute("soil_humidity$position_x"), attribute("soil_humidity$position_y"), attribute("soil_humidity$humidity"));
+            finalQuery.project(attribute("gps_position$start"), attribute("gps_position$end"), attribute("gps_position$count"), attribute("gps_position$robot_id"), attribute("gps_position$position_x"), attribute("gps_position$position_y"), attribute("soil_humidity$count"), attribute("soil_humidity$sensor_id"), attribute("soil_humidity$position_x"), attribute("soil_humidity$position_y"), attribute("soil_humidity$humidity"));
             finalQuery.map(new CalculateDistance());
             finalQuery.filter(attribute("distance").lessThanOrEqual(bufferRadius));
             finalQuery.filter(attribute("humidity").greaterThan(humThreshold));
