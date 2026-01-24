@@ -32,7 +32,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./logs:/logs
-    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_LEADER}", "${ROBOT_NAME_LEADER}", "${ROS2_TOPIC_LEADER}", "${MQTT_TOPIC_LEADER}" ]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME_LEADER}", "${ROS2_TOPIC_LEADER}", "${MQTT_TOPIC_LEADER}" ]
     env_file: .env
 
   ros2_play_leader:
@@ -59,7 +59,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./logs:/logs
-    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_FOLLOWER}", "${ROBOT_NAME_FOLLOWER}", "${ROS2_TOPIC_FOLLOWER}", "${MQTT_TOPIC_FOLLOWER}" ]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME_FOLLOWER}", "${ROS2_TOPIC_FOLLOWER}", "${MQTT_TOPIC_FOLLOWER}" ]
     env_file: .env
 
   ros2_play_follower:
@@ -86,7 +86,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./logs:/logs
-    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT_LEADER_INV}", "${ROBOT_NAME_LEADER_INV}", "${ROS2_TOPIC_LEADER_INV}", "${MQTT_TOPIC_LEADER_INV}" ]
+    command: [ "python3", "/scripts/ros2_mqtt.py", "${MQTT_IP}", "${MQTT_PORT}", "${ROBOT_NAME_LEADER_INV}", "${ROS2_TOPIC_LEADER_INV}", "${MQTT_TOPIC_LEADER_INV}" ]
     env_file: .env
 
   ros2_play_leader_inv:
@@ -141,7 +141,7 @@ services:
       - ./scripts:/scripts
       - ./data:/data
       - ./logs:/logs
-    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT_HUMIDITY}", "/data/sensors.csv" ]
+    command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT}", "/data/sensors.csv" ]
     env_file: .env
 
   nes_worker_humidity:
@@ -171,7 +171,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./logs:/logs
-    command: [ "python", "/scripts/subscriber.py", "${QUERY_HOST_IP}", "${QUERY_HOST_MQTT_PORT}", "${QUERY_NAMES}" ]
+    command: [ "python", "/scripts/subscriber.py", "${QUERY_HOST_IP}", "${MQTT_PORT}", "${QUERY_NAMES}" ]
     env_file: .env
 
   geofence_query:

@@ -16,7 +16,7 @@
 3. **On Machine 2 (ROS2 Bridge):**
     Navigate to the `/ros2_mqtt_bridge` directory:
     * _Optional: Set `MQTT_IP` in the `.env` file to the IP address of Machine 2, or leave it as `127.0.0.1`_
-    * Configure `ROBOT_NAME`, `ROS2_TOPIC`, and `MQTT_TOPIC` in the `.env` file, select between `leader` and `follower`
+    * Configure `ROBOT_NAME`, `ROS2_TOPIC`, and `MQTT_TOPIC` in the `.env` file, select between `leader`, `follower` and `leader_inv`
     * Run `docker compose pull` and `docker compose build`
     * Run services: `docker compose up mosquitto -d` and `docker compose up ros2_mqtt -d`
     * Run `docker compose up ros2_play` (perform this after configuring the worker in Step 4, and preferably after submitting the queries in Step 8)
@@ -61,4 +61,4 @@
 
 ### One-machine Usage
 
-You can also run all the components on one machine. to do so enter the /all_in_one_configuration directory. you can either type `docker compose up...` commands by urself, or type bash shell/run_all.sh. this will run all the robots and humidity producer, also the ui , all the queries and the subscriber. it will also run visualizer to see everythong in realtime on your browser
+You can also run all the components on one machine. to do so enter the /all_in_one_configuration directory. you can either type `docker compose up...` commands by urself, or type bash shell/run_all.sh. this will run all the robots and humidity producer, also the ui , all the queries and the subscriber. it will also run visualizer to see everythong in realtime on your browser. change MACHINE_IP!!
