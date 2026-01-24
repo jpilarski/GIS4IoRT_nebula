@@ -31,7 +31,8 @@ sleep 5
 docker compose up collision_query -d
 sleep 5
 
-
+docker compose up visualizer -d
+sleep 3
 
 docker compose up ros2_play_leader -d
 docker compose up ros2_play_follower -d

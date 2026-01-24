@@ -163,6 +163,17 @@ services:
     command: [ "python3", "/scripts/humidity_producer.py", "${MQTT_IP}", "${MQTT_PORT}", "/data/sensors.csv" ]
     env_file: .env
 
+  visualizer:
+    build:
+      context: .
+      dockerfile: config/dockerfiles/Dockerfile.visualizer
+    network_mode: host
+    volumes:
+      - ./scripts:/scripts
+      - ./data:/data
+    command: []
+    env_file: .env
+
   subscriber:
     build:
       context: .
