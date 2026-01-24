@@ -58,3 +58,7 @@
     * Run queries: `docker compose up geofence_query -d`, `docker compose up humidity_query -d` and `docker compose up collision_query -d`
     * Open the NES UI (current Machine IP, port `9000`) and enter `NES_COORDINATOR_IP:8081`
     * Run subscriber by running `docker compose up subscriber`
+
+### One-machine Usage
+
+You can also run all the components on one machine. to do so enter the /all_in_one_configuration directory. you can either type `docker compose up...` commands by urself, or type bash shell/run_all.sh. this will run all the robots and humidity producer, also the ui , all the queries and the subscriber. it will also run visualizer to see everythong in realtime on your browser

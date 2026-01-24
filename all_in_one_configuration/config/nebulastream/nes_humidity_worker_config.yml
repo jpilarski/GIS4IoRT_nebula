@@ -1,0 +1,13 @@
+coordinatorHost: 127.0.0.1
+coordinatorPort: 4000
+localWorkerHost: 127.0.0.1
+workerId: 4
+logLevel: LOG_WARNING
+
+physicalSources:
+  - logicalSourceName: soil_humidity
+    physicalSourceName: sensors
+    type: MQTT_SOURCE
+    configuration:
+      url: ws://127.0.0.1:9004
+      topic: humidity_producer
