@@ -1,17 +1,10 @@
-docker compose pull
-docker compose build
-
 docker compose up nes_coordinator -d
-sleep 3
 docker compose up nes_ui -d
-sleep 3
 docker compose up mosquitto -d
 sleep 3
 
 docker compose up ros2_mqtt_leader -d
-sleep 3
 docker compose up ros2_mqtt_follower -d
-sleep 3
 docker compose up ros2_mqtt_leader_inv -d
 sleep 3
 
