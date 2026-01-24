@@ -5,16 +5,7 @@ docker compose up nes_coordinator -d
 sleep 3
 docker compose up nes_ui -d
 sleep 3
-
-docker compose up mosquitto_leader -d
-sleep 3
-docker compose up mosquitto_follower -d
-sleep 3
-docker compose up mosquitto_leader_inv -d
-sleep 3
-docker compose up mosquitto_humidity -d
-sleep 3
-docker compose up mosquitto_results -d
+docker compose up mosquitto -d
 sleep 3
 
 docker compose up ros2_mqtt_leader -d

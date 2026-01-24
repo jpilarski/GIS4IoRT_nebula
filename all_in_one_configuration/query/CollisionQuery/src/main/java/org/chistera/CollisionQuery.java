@@ -214,7 +214,7 @@ public class CollisionQuery {
             String nesIp = System.getenv("NES_COORDINATOR_IP");
             String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
             String mqttIp = System.getenv("QUERY_HOST_IP");
-            String mqttPortStr = System.getenv("QUERY_HOST_MQTT_PORT");
+            String mqttPortStr = System.getenv("MQTT_PORT");
             String collisionQuery = System.getenv("COLLISION_QUERY");
             String collisionRadiusStr = System.getenv("COLLISION_RADIUS");
 
