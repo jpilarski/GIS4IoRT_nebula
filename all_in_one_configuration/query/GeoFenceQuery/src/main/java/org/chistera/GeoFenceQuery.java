@@ -177,7 +177,7 @@ public class GeoFenceQuery {
             String nesIp = System.getenv("NES_COORDINATOR_IP");
             String nesPortStr = System.getenv("NES_COORDINATOR_REST_PORT");
             String mqttIp = System.getenv("QUERY_HOST_IP");
-            String mqttPortStr = System.getenv("QUERY_HOST_MQTT_PORT");
+            String mqttPortStr = System.getenv("MQTT_PORT");
             String geoFenceQuery = System.getenv("GEOFENCE_QUERY");
 
             int nesPort = Integer.parseInt(nesPortStr);
