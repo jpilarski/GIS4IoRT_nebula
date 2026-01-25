@@ -171,7 +171,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./data:/data
-    command: []
+    command: [ "python3", "/scripts/visualizer.py", "${MQTT_IP}", "${MQTT_PORT}", "${VISUALIZER_PORT}", "${DATA_TOPICS}", "${QUERY_NAMES}", "${HUMIDITY_THRESHOLD}", "${BUFFER_RADIUS}", "/data/field/${FIELD_FILE}" ]
     env_file: .env
 
   subscriber:

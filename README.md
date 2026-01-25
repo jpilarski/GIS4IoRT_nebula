@@ -59,6 +59,32 @@
     * Open the NES UI (current Machine IP, port `9000`) and enter `NES_COORDINATOR_IP:8081`
     * Run subscriber by running `docker compose up subscriber`
 
-### One-machine Usage
+### All-in-One Configuration
 
-You can also run all the components on one machine. to do so enter the /all_in_one_configuration directory. you can either type `docker compose up...` commands by urself, or type bash shell/run_all.sh. this will run all the robots and humidity producer, also the ui , all the queries and the subscriber. it will also run visualizer to see everythong in realtime on your browser. change MACHINE_IP!!
+You can also run all components on a single machine. To do this, navigate to the `/all_in_one_configuration` directory and follow these steps:
+
+1. **Configure Environment:**
+    * Set the `MACHINE_IP` variable in the `.env` file
+    * Update the `MACHINE_IP` in all NebulaStream worker configuration files
+
+2. **Build Services:**
+    ```bash
+    docker compose pull
+    docker compose build
+    ```
+
+3. **Run the System:**
+    
+    You can either start services manually using `docker compose up ...` or use the provided automation script:
+    ```bash
+    bash shells/run_all.sh
+    ```
+    This script initializes:
+    * 3 Robot instances
+    * Humidity Producer
+    * NebulaStream UI
+    * All queries and the text subscriber
+
+4. **Monitoring:**
+    
+    Once started, you can view the live robot positions and query results by navigating to `MACHINE_IP:8050` in your web browser
