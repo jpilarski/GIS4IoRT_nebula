@@ -15,5 +15,5 @@ services:
       - --worker.coordinatorPort=${NES_COORDINATOR_RPC_PORT}
       - --worker.localWorkerHost=${NES_COORDINATOR_IP}
       - --logLevel=LOG_WARNING
-      - --configPath=/config/nebulastream/nes_coordinator_config.yml
+      - --configPath=/config/nes_coordinator_config.yml
     env_file: .env
